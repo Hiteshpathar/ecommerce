@@ -9,4 +9,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Product extends Model
 {
     use HasFactory,SoftDeletes;
+    public function inventory()
+    {
+        return $this->hasOne(ProductInventory::class,'id','inventory_id');
+    }
+    public function category()
+    {
+        return $this->hasOne(ProductCategory::class,'id','category_id');
+    }
 }

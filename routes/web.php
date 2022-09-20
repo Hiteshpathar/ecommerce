@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,13 +16,22 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/', function () {
-    return view('admin/index');
-});
+Route::get('admin', function () {
+    return view('admin/login');
+})->name('login');
 Route::get('/test',[UserController::class,'test']);
 
-Route::prefix('users')->group(function () {
-    Route::get('/',[UserController::class,'index']);
-    Route::get('/{id}',[UserController::class,'show']);
-    Route::delete('/{id}',[UserController::class,'destroy']);
+Route::post('/verify-admin',[AdminController::class,'verifyAdmin'])->name('verify-admin');
+
+Route::prefix('admin')->group(function () {
+    Route::get('/users',[UserController::class,'index'])->name('users-list');
+    Route::get('/users/add',function () {
+        return view('admin/addUser');
+    })->name('add-user');
+    Route::post('/user',[UserController::class,'store'])->name('store-user');
+    Route::get("edit/{id}", [UserController::class, 'edit'])->name('edit-user');
+    Route::get('/user/{id}',[UserController::class,'show'])->name('user-by-id');
+    Route::delete('/user/{id}',[UserController::class,'destroy'])->name('delete-user');
+
+    Route::get('/products',[ProductController::class,'index'])->name('products-list');
 });
