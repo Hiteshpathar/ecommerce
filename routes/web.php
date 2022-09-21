@@ -16,22 +16,32 @@ use App\Http\Controllers\ProductController;
 |
 */
 
-Route::get('admin', function () {
-    return view('admin/login');
-})->name('login');
-Route::get('/test',[UserController::class,'test']);
 
-Route::post('/verify-admin',[AdminController::class,'verifyAdmin'])->name('verify-admin');
+Route::group(['prefix'=>'admin','middleware'=>'validateAdmin'],function () {
+    Route::get('/',function (){
+        return redirect()->route('users-list');
+    });
+    Route::get('login', function () {
+        return view('admin/login');
+    })->name('admin-login')->withoutMiddleware('validateAdmin');
 
-Route::prefix('admin')->group(function () {
-    Route::get('/users',[UserController::class,'index'])->name('users-list');
+    Route::post('/verify',[AdminController::class,'verifyAdmin'])->name('verify-admin')->withoutMiddleware('validateAdmin');
+    Route::get('logout', [AdminController::class, 'logout'])->name('admin-logout');
+    Route::get('editprofile/{email}', [AdminController::class, 'edit'])->name('edit-admin-profile');
+    Route::get('resetpassword', function () {
+        return view('resetPass');
+    })->name('reset-admin-password');
+    Route::post("resetpassword", [AdminController::class, 'resetPassword'])->name('store-updated-admin-password');
+    Route::get('/users',[UserController::class,'index'])->name('users-list')->middleware('validateAdmin');
     Route::get('/users/add',function () {
         return view('admin/addUser');
     })->name('add-user');
     Route::post('/user',[UserController::class,'store'])->name('store-user');
     Route::get("edit/{id}", [UserController::class, 'edit'])->name('edit-user');
+    Route::get("send-mail/{id}", [UserController::class, 'sendMail'])->name('send-mail');
     Route::get('/user/{id}',[UserController::class,'show'])->name('user-by-id');
     Route::delete('/user/{id}',[UserController::class,'destroy'])->name('delete-user');
+    Route::get('approve/{id}/{is_approved}', [UserController::class, 'approve'])->name('approve-user');
 
     Route::get('/products',[ProductController::class,'index'])->name('products-list');
 });

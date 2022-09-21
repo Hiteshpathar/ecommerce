@@ -39,5 +39,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserAddress::class,'user_id','id');
     }
-
+    public function scopeFilter($query, $filters)
+    {
+        if (isset($filters['search'])) {
+            $query->where('first_name', 'LIKE', '%' . $filters['search'] . '%');
+            $query->orWhere('last_name', 'LIKE', '%' . $filters['search'] . '%');
+            $query->orWhere('email', 'LIKE', '%' . $filters['search'] . '%');
+        }
+        if (isset($filters['status'])){
+            $query->where('is_active',$filters['status']);
+        }
+    }
 }

@@ -15,14 +15,19 @@ class AdminController extends Controller
         ]);
 
         try {
-            Admin::where([
+            $admin = Admin::where([
                 ['email', '=', $request->input('email')],
                 ['password', '=', $request->input('password')],
             ])->firstOrFail();
+            session(['admin' => $admin]);
             return redirect()->route('users-list')->with('success', 'Welcome');
         } catch (\Exception $exception) {
             $request->session()->flash('error', 'User Not Found!');
-            return redirect()->route('login');
+            return redirect()->route('admin-login');
         }
+    }
+    public function logout(){
+        session()->flush();
+        return redirect()->route('admin-login')->with('success', 'logged out successfully');
     }
 }

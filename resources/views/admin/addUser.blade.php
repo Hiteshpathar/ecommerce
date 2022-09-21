@@ -76,20 +76,6 @@
                                        placeholder="Mobile Number"><br>
                                 <span style="color: red">@error('email'){{$message}}@enderror</span>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label>Password</label>
-                                    <input class="au-input au-input--full" type="password" name="password"
-                                           placeholder="Password"><br>
-                                    <span style="color: red">@error('password'){{$message}}@enderror</span>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label>Confirm Password</label>
-                                    <input class="au-input au-input--full" type="password" name="confirm_password"
-                                           placeholder="Confirm Password"><br>
-                                    <span style="color: red">@error('password'){{$message}}@enderror</span>
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <label>Address Line 1</label>
                                 <input class="au-input au-input--full" type="text" name="address1"

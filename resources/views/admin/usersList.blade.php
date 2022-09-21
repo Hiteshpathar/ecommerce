@@ -51,8 +51,8 @@
         <div class="header-mobile__bar">
             <div class="container-fluid">
                 <div class="header-mobile-inner">
-                    <a class="logo" href="/">
-                        <img src="images/icon/logo.png" alt="CoolAdmin"/>
+                    <a href="#">
+                        <img src="{{asset("images/icon/logo.png")}}" alt="Cool Admin"/>
                     </a>
                     <button class="hamburger hamburger--slider" type="button">
                             <span class="hamburger-box">
@@ -66,67 +66,12 @@
             <div class="container-fluid">
                 <ul class="navbar-mobile__list list-unstyled">
                     <li class="has-sub">
-                        <a class="js-arrow" href="#">
-                            <i class="fas fa-tachometer-alt"></i>Menu</a>
-                        <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
-                            <li>
-                                <a href="/">Item 1</a>
-                            </li>
-                        </ul>
+                        <a class="js-arrow" href="{{route('users-list')}}">
+                            <i class="fas fa-user"></i>Users</a>
                     </li>
-                    <li class="has-sub">
-                        <a class="js-arrow" href="#">
-                            <i class="fas fa-copy"></i>Pages</a>
-                        <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
-                            <li>
-                                <a href="login.php">Login</a>
-                            </li>
-                            <li>
-                                <a href="register.php">Register</a>
-                            </li>
-                            <li>
-                                <a href="reset-pass.php">Reset Password</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="has-sub">
-                        <a class="js-arrow" href="#">
-                            <i class="fas fa-desktop"></i>UI Elements</a>
-                        <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
-                            <li>
-                                <a href="button.html">Button</a>
-                            </li>
-                            <li>
-                                <a href="badge.html">Badges</a>
-                            </li>
-                            <li>
-                                <a href="tab.html">Tabs</a>
-                            </li>
-                            <li>
-                                <a href="card.html">Cards</a>
-                            </li>
-                            <li>
-                                <a href="alert.html">Alerts</a>
-                            </li>
-                            <li>
-                                <a href="progress-bar.html">Progress Bars</a>
-                            </li>
-                            <li>
-                                <a href="modal.html">Modals</a>
-                            </li>
-                            <li>
-                                <a href="switch.html">Switchs</a>
-                            </li>
-                            <li>
-                                <a href="grid.html">Grids</a>
-                            </li>
-                            <li>
-                                <a href="fontawesome.html">Fontawesome Icon</a>
-                            </li>
-                            <li>
-                                <a href="typo.html">Typography</a>
-                            </li>
-                        </ul>
+                    <li class="active has-sub">
+                        <a class="js-arrow" href="{{route('products-list')}}">
+                            <i class="fas fa-user"></i>Products</a>
                     </li>
                 </ul>
             </div>
@@ -165,13 +110,75 @@
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
                     <div class="header-wrap">
-                        <form class="form-header" action="" method="get">
-                            <input class="au-input au-input--xl" type="text" name="search"
+                        <form class="form-header" action="" method="get" id="search_form">
+                            <input class="au-input au-input--xl" id="search" type="text" name="search"
                                    placeholder="Search for datas &amp; reports..."/>
                             <button class="au-btn--submit" type="submit" name="searching">
                                 <i class="zmdi zmdi-search"></i>
                             </button>
                         </form>
+                        <div class="header-button">
+                            {{--                                <div class="noti-wrap">--}}
+                            {{--                                    <div class="noti__item js-item-menu">--}}
+                            {{--                                        <i class="zmdi zmdi-notifications"></i>--}}
+                            {{--                                        <span class="quantity">{{$totalPendingRequests}}</span>--}}
+                            {{--                                        <div class="notifi-dropdown js-dropdown">--}}
+                            {{--                                            <div class="notifi__title">--}}
+
+                            {{--                                                <p>You have {{$totalPendingRequests}} pending requests</p>--}}
+                            {{--                                            </div>--}}
+                            {{--                                            @foreach($students as $student)--}}
+                            {{--                                                @if($student->is_approved == 0)--}}
+                            {{--                                                    <div class="notifi__item">--}}
+                            {{--                                                        <div class="bg-c1 img-cir img-40">--}}
+                            {{--                                                            <a href="{{route('approve-student',[$student->id,$student->is_approved])}}"><i--}}
+                            {{--                                                                    class="fa fa-check" aria-hidden="true"></i></a>--}}
+                            {{--                                                        </div>--}}
+                            {{--                                                        <div class="content">--}}
+                            {{--                                                            {{$student->first_name.' '.$student->last_name}} wants to--}}
+                            {{--                                                            login--}}
+                            {{--                                                        </div>--}}
+                            {{--                                                    </div>--}}
+                            {{--                                                @endif--}}
+                            {{--                                            @endforeach--}}
+                            {{--                                        </div>--}}
+                            {{--                                    </div>--}}
+                            {{--                                </div>--}}
+                            <div class="account-wrap">
+                                <div class="account-item clearfix js-item-menu">
+                                    <div class="content">
+                                        <a class="js-acc-btn" href="#">{{session('admin')->first_name}}</a>
+                                    </div>
+                                    <div class="account-dropdown js-dropdown">
+                                        <div class="info clearfix">
+                                            <div class="content">
+                                                <h5 class="name">
+                                                    <a href="#">{{session('admin')->first_name}}</a>
+                                                </h5>
+                                                <span class="email">{{session('admin')->email}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="account-dropdown__body">
+                                            <div class="account-dropdown__item">
+                                                <a href="{{ route('edit-admin-profile',session('admin')) }}">
+                                                    <i class="zmdi zmdi-account"></i>Account</a>
+                                            </div>
+                                        </div>
+                                        <div class="account-dropdown__body">
+                                            <div class="account-dropdown__item">
+                                                <a href="{{route('reset-admin-password')}}">
+                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>Reset
+                                                    Password</a>
+                                            </div>
+                                        </div>
+                                        <div class="account-dropdown__footer">
+                                            <a href="{{route('admin-logout')}}">
+                                                <i class="zmdi zmdi-power"></i>Logout</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -198,15 +205,15 @@
                                                 <div class="rs-select2--light rs-select2--md">
                                                     <select class="js-select2" name="status"
                                                             onchange="this.form.submit()">
-                                                        <option value="All" selected>All Users
+                                                        <option value="" selected>All Users
                                                         </option>
-                                                        <option value="Approved"@if ($page == "Approved")
+                                                        <option value="1"@if ($page == "Active")
                                                             <?php echo " selected"; ?>
-                                                            @endif >Approved
+                                                            @endif >Active
                                                         </option>
-                                                        <option value="Denied" @if ($page == "Denied")
+                                                        <option value="0" @if ($page == "Inactive")
                                                             <?php echo "selected"; ?>
-                                                            @endif >Denied
+                                                            @endif >Inactive
                                                         </option>
                                                     </select>
                                                     <div class="dropDownSelect2"></div>
@@ -230,7 +237,7 @@
                                             <th>First Name</th>
                                             <th>Last Name</th>
                                             <th>Email</th>
-                                            <th>City</th>
+                                            <th>Status</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -239,11 +246,24 @@
                                                 <td>{{$user->first_name}}</td>
                                                 <td>{{$user->last_name}}</td>
                                                 <td>{{$user->email}}</td>
-                                                @foreach($user->address as $address)
-                                                    @if($address->user_id === $user->id)
-                                                        <td>{{$address->city}}</td>
+                                                <td>
+                                                    @if ($user->is_active == 1)
+                                                        <a href="{{route('approve-user',[$user->id,$user->is_active])}}"
+                                                           class="btn btn-sm btn-success">Active</a>
+                                                    @else
+                                                        <a href="{{route('approve-user',[$user->id,$user->is_active])}}"
+                                                           class="btn btn-sm btn-danger"> Inactive</a>
                                                     @endif
-                                                @endforeach
+                                                </td>
+                                                <td>
+                                                    <div class="table-data-feature">
+                                                        <a href="{{ route('send-mail',$user->id)}}"
+                                                           class="item"
+                                                           data-toggle="tooltip" data-placement="top" title="Send Mail">
+                                                            <i class="zmdi zmdi-email"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
                                                 <td>
                                                     <div class="table-data-feature">
                                                         <a href="{{ route('edit-user',$user->id)}}"
@@ -266,6 +286,9 @@
                                         @endforeach
                                         </tbody>
                                     </table>
+                                    <span>
+                                    {{$users->links()}}
+                                </span>
                                 </div>
                                 <!-- END DATA TABLE -->
                             @endif
