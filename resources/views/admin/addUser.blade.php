@@ -108,7 +108,7 @@
                                 <span style="color: red">@error('image'){{$message}}@enderror</span>
                             </div>
                             <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit" name="submit">
-                                add
+                                SAVE
                             </button>
 
                         </form>

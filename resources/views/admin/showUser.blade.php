@@ -65,11 +65,11 @@
         <nav class="navbar-mobile">
             <div class="container-fluid">
                 <ul class="navbar-mobile__list list-unstyled">
-                    <li class="has-sub">
+                    <li class="{{ isset($users) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('users-list')}}">
                             <i class="fas fa-user"></i>Users</a>
                     </li>
-                    <li class="active has-sub">
+                    <li class="{{ isset($products) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-user"></i>Products</a>
                     </li>
@@ -110,14 +110,10 @@
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
                     <div class="header-wrap">
-                        @php
-                            isset($_GET['search'])?$search=$_GET['search']:$search=''
-                        @endphp
                         <form class="form-header" action="" method="get" id="search_form">
-                            <input class="au-input au-input--xl" id="search" type="text" name="search"
-                                   value="{{$search}}"
-                                   placeholder="Search for First Name, Last Name &amp; Email..."/>
-                            <button class="au-btn--submit" type="submit">
+                            <input class="au-input au-input--xl" id="search" type="text" name="search" value=""
+                                   placeholder="Search for datas &amp; reports..."/>
+                            <button class="au-btn--submit" type="submit" name="searching">
                                 <i class="zmdi zmdi-search"></i>
                             </button>
                         </form>
@@ -155,9 +151,6 @@
                                     </div>
                                     <div class="account-dropdown js-dropdown">
                                         <div class="info clearfix">
-                                            <div class="image">
-                                                <img src="" alt="Admin"/>
-                                            </div>
                                             <div class="content">
                                                 <h5 class="name">
                                                     <a href="#">{{session('admin')->first_name}}</a>
@@ -193,140 +186,99 @@
         <!-- HEADER DESKTOP-->
 
         <!-- MAIN CONTENT-->
-        {{--        END DELETE CONFIRMATION MODAL--}}
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{--        END DELETE CONFIRMATION MODAL--}}
-
         <div class="main-content">
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-md-12">
-                            <!-- DATA TABLE -->
-                            <div class="table-data__tool">
-                                <div class="table-data__tool-left">
-                                    <div class="rs-select2--light rs-select2--sm">
-                                        @php
-                                            isset($_GET['status'])?$status=$_GET['status']:$status='all'
-                                        @endphp
-                                        <form method="get">
-                                            <div class="table-data__tool-left">
-                                                <div class="rs-select2--light rs-select2--md">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class=" card-header login-logo">
+                                    <a href="#">
+                                        <img src="{{asset('images/icon/logo.png')}}" alt="CoolAdmin">
+                                    </a>
+                                </div>
+                                <div class="card-body">
+                                    <div class="login-form">
 
-                                                    <select class="js-select2" name="status"
-                                                            onchange="this.form.submit()">
-                                                        <option value="" {{ $status =='all' ? 'selected' : ''  }}>
-                                                            All Users
-                                                        </option>
-                                                        <option value="1"{{ $status ==1 ? 'selected' : ''  }} >
-                                                            Active
-                                                        </option>
-                                                        <option value="0" {{ $status ==0 ? 'selected' : ''  }} >
-                                                            Inactive
-                                                        </option>
-                                                    </select>
-                                                    <div class="dropDownSelect2"></div>
+                                        <form action="{{route('update-user')}}" method="post"
+                                              enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
+                                                    <label>First Name</label>
+                                                    <input class="au-input au-input--full" type="text" name="first_name"
+                                                           placeholder="First Name" value="{{$user->first_name}}"><br>
+                                                    <span
+                                                        style="color: red">@error('first_name'){{$message}}@enderror</span>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>Last Name</label>
+                                                    <input class="au-input au-input--full" type="text" name="last_name"
+                                                           placeholder="Last Name" value="{{$user->last_name}}"><br>
+                                                    <span
+                                                        style="color: red">@error('last_name'){{$message}}@enderror</span>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label>Email Address</label>
+                                                    <input class="au-input au-input--full" type="email" name="email"
+                                                           placeholder="Email" value="{{$user->email}}"><br>
+                                                    <span style="color: red">@error('email'){{$message}}@enderror</span>
                                                 </div>
                                             </div>
+
+                                            <div class="form-group">
+                                                <label>Mobile Number</label>
+                                                <input class="au-input au-input--full" type="number" name="mobile"
+                                                       placeholder="Mobile Number" value="{{$user->mobile}}"><br>
+                                                <span style="color: red">@error('email'){{$message}}@enderror</span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Address Line 1</label>
+                                                <input class="au-input au-input--full" type="text" name="address1"
+                                                       placeholder="Address Line 1" value="{{$address->address1}}"><br>
+                                                <span style="color: red">@error('address1'){{$message}}@enderror</span>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Address Line 2</label>
+                                                <input class="au-input au-input--full" type="text" name="address2"
+                                                       placeholder="Address Line 2" value="{{$address->address2}}"><br>
+                                                <span style="color: red">@error('address2'){{$message}}@enderror</span>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label>City</label>
+                                                    <input class="au-input au-input--full" type="text" name="city"
+                                                           placeholder="City" value="{{$address->city}}"><br>
+                                                    <span style="color: red">@error('city'){{$message}}@enderror</span>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label>Postal Code</label>
+                                                    <input class="au-input au-input--full" type="number"
+                                                           name="postal_code"
+                                                           placeholder="Postal Code"
+                                                           value="{{$address->postal_code}}"><br>
+                                                    <span
+                                                        style="color: red">@error('postal_code'){{$message}}@enderror</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Profile Image</label>
+                                                <input type="file" name="image"><br>
+                                                <span style="color: red">@error('image'){{$message}}@enderror</span>
+                                            </div>
+                                            <input type="hidden" name="id" value="{{$user->id}}">
+                                            <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit"
+                                                    name="submit">
+                                                SAVE
+                                            </button>
                                         </form>
-                                        <div class="dropDownSelect2"></div>
                                     </div>
                                 </div>
-                                <div class="table-data__tool-right">
-                                    <a href="{{route('add-user')}}" class="btn btn-success">Add User</a>
-                                </div>
                             </div>
-                            @if(count($users) == 0)
-                                <h2>No data found</h2>
-                            @else
-                                <div class="table-responsive table-responsive-data2">
-                                    <table class="table table-data2">
-                                        <thead>
-                                        <tr>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Email</th>
-                                            <th>Status</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($users as $user)
-                                            <tr class="tr-shadow" id="sid{{$user->id}}">
-                                                <td>{{$user->first_name}}</td>
-                                                <td>{{$user->last_name}}</td>
-                                                <td>{{$user->email}}</td>
-                                                <td>
-                                                    @if ($user->is_active == 1)
-                                                        <a href="{{route('approve-user',[$user->id,$user->is_active])}}"
-                                                           class="btn btn-sm btn-success">Active</a>
-                                                    @else
-                                                        <a href="{{route('approve-user',[$user->id,$user->is_active])}}"
-                                                           class="btn btn-sm btn-danger"> Inactive</a>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <div class="table-data-feature">
-                                                        <a href="{{ route('edit-user',$user->id)}}"
-                                                           class="item"
-                                                           data-toggle="tooltip" data-placement="top" title="Details">
-                                                            <i class="zmdi zmdi-eye"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="table-data-feature">
-                                                        <a href="{{ route('send-mail',$user->id)}}"
-                                                           class="item"
-                                                           data-toggle="tooltip" data-placement="top" title="Send Mail">
-                                                            <i class="zmdi zmdi-email"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="table-data-feature">
-                                                        <a href="javascript:void(0)" class="item" data-toggle="tooltip"
-                                                           data-placement="top"
-                                                           onclick="deleteUser({{$user->id}})">
-                                                            <i class="zmdi zmdi-delete"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
-                                    <span>
-                                    {{$users->links()}}
-                                </span>
-                                </div>
-                                <!-- END DATA TABLE -->
-                            @endif
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- END MAIN CONTENT-->
-            <!-- END PAGE CONTAINER-->
         </div>
 
     </div>
@@ -370,10 +322,9 @@
 </script>
 <script type="text/javascript">
     function deleteUser(id) {
-
         var url = "{{ route('delete-user', ":id") }}";
         url = url.replace(':id', id);
-
+        // if(confirm('Do you really want to delete this record?')){
         $.ajax({
             url: url,
             type: 'post',
@@ -388,6 +339,7 @@
                 $('#sid' + id).remove();
             }
         })
+        // }
     }
 </script>
 </body>

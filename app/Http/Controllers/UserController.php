@@ -6,8 +6,6 @@ use App\Jobs\SendEmailJob;
 use App\Models\User;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -61,7 +59,44 @@ class UserController extends Controller
         }
     }
 
-    public function approve($id, $is_active)
+    public function edit($id)
+    {
+        $user = User::find($id);
+        $address = $user->address[0];
+        return view('admin/showUser', ['user' => $user,'address'=>$address]);
+    }
+
+    public function update(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->first_name = $request->input('first_name');
+        $user->last_name = $request->input('last_name') ?? '';
+        $user->email = $request->input('email');
+        $user->password = Str::random(10);
+        $user->mobile = $request->input('mobile') ?? '';
+//            $file = Storage::disk('public')->putFile('images',$request->file('image'));
+//            $name = explode('/',$file);
+//            $user->image = $name[1];
+        $user->address()->update([
+            'address1' => $request->input('address1'),
+            'address2' => $request->input('address2') ?? '',
+            'city' => $request->input('city') ?? '',
+            'postal_code' => $request->input('postal_code')
+        ]);
+//        if ($request->image == null) {
+//            $student->image = $student->image;
+//        } else {
+//            $file = Storage::disk('public')->putFile('images', $request->file('image'));
+//            $name = explode('/', $file);
+//            $student->image = $name[1];
+//        }
+        $user->save();
+        return redirect()->route('users-list')->with('success', 'User updates successfully');
+
+    }
+
+    public
+    function approve($id, $is_active)
     {
         $user = User::find($id);
         $is_active == 1 ? $user->is_active = 0 : $user->is_active = 1;
@@ -69,21 +104,23 @@ class UserController extends Controller
         return redirect()->route('users-list')->with('success', 'status changed successfully');
     }
 
-    public function sendMail(Request $request)
+    public
+    function sendMail(Request $request)
     {
         $user = User::find($request->id)->first();
-        $name = $user->first_name.' '.$user->last_name;
+        $name = $user->first_name . ' ' . $user->last_name;
         $data = ['name' => $name,
-            'password'=>$user->password,
+            'password' => $user->password,
             'to' => $user->email,
             'from' => 'admin@gmail.com',
             'subject' => 'Your Credentials from ...'];
 
         SendEmailJob::dispatch($data);
-        return redirect()->back()->with('success','Mail Sent Successfully');
+        return redirect()->back()->with('success', 'Mail Sent Successfully');
     }
 
-    public function destroy($id)
+    public
+    function destroy($id)
     {
         User::find($id)->delete();
         return response()->json(['success' => 'deleted successfully']);

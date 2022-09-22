@@ -38,6 +38,7 @@ Route::group(['prefix'=>'admin','middleware'=>'validateAdmin'],function () {
     })->name('add-user');
     Route::post('/user',[UserController::class,'store'])->name('store-user');
     Route::get("edit/{id}", [UserController::class, 'edit'])->name('edit-user');
+    Route::post('/user/update', [UserController::class, 'update'])->name('update-user');
     Route::get("send-mail/{id}", [UserController::class, 'sendMail'])->name('send-mail');
     Route::get('/user/{id}',[UserController::class,'show'])->name('user-by-id');
     Route::delete('/user/{id}',[UserController::class,'destroy'])->name('delete-user');

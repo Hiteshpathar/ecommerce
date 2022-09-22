@@ -144,11 +144,11 @@
         <div class="menu-sidebar__content js-scrollbar1">
             <nav class="navbar-sidebar">
                 <ul class="list-unstyled navbar__list">
-                    <li class="active has-sub">
+                    <li class="{{ isset($users) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('users-list')}}">
                             <i class="fas fa-user"></i>Users</a>
                     </li>
-                    <li class="active has-sub">
+                    <li class="{{ isset($products) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-user"></i>Products</a>
                     </li>
