@@ -17,4 +17,12 @@ class Product extends Model
     {
         return $this->hasOne(ProductCategory::class,'id','category_id');
     }
+    public function orders()
+    {
+        return $this->hasmany(Order::class);
+    }
+    public function cart()
+    {
+        return $this->hasmany(Cart::class);
+    }
 }

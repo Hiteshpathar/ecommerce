@@ -22,8 +22,7 @@ class CreateUserAddressesTable extends Migration
             $table->string('postal_code')->nullable();
             $table->string('telephone')->nullable();
             $table->string('mobile')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

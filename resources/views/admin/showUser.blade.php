@@ -235,20 +235,20 @@
                                             <div class="form-group">
                                                 <label>Address Line 1</label>
                                                 <input class="au-input au-input--full" type="text" name="address1"
-                                                       placeholder="Address Line 1" value="{{$address->address1}}"><br>
+                                                       placeholder="Address Line 1" value="{{$address->address1??''}}"><br>
                                                 <span style="color: red">@error('address1'){{$message}}@enderror</span>
                                             </div>
                                             <div class="form-group">
                                                 <label>Address Line 2</label>
                                                 <input class="au-input au-input--full" type="text" name="address2"
-                                                       placeholder="Address Line 2" value="{{$address->address2}}"><br>
+                                                       placeholder="Address Line 2" value="{{$address->address2??''}}"><br>
                                                 <span style="color: red">@error('address2'){{$message}}@enderror</span>
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <label>City</label>
                                                     <input class="au-input au-input--full" type="text" name="city"
-                                                           placeholder="City" value="{{$address->city}}"><br>
+                                                           placeholder="City" value="{{$address->city??''}}"><br>
                                                     <span style="color: red">@error('city'){{$message}}@enderror</span>
                                                 </div>
                                                 <div class="form-group col-md-6">
@@ -256,7 +256,7 @@
                                                     <input class="au-input au-input--full" type="number"
                                                            name="postal_code"
                                                            placeholder="Postal Code"
-                                                           value="{{$address->postal_code}}"><br>
+                                                           value="{{$address->postal_code??''}}"><br>
                                                     <span
                                                         style="color: red">@error('postal_code'){{$message}}@enderror</span>
                                                 </div>

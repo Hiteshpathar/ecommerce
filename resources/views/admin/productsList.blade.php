@@ -228,7 +228,7 @@
                                         <thead>
                                         <tr>
                                             <th>Name</th>
-                                            <th>Desciption</th>
+                                            <th>Status</th>
                                             <th>Inventory</th>
                                             <th>Type</th>
                                         </tr>
@@ -236,9 +236,23 @@
                                         <tbody>
                                         @foreach($products as $product)
                                             <tr class="tr-shadow" id="sid{{$product->id}}">
-                                                <td>{{$product->name}}</td>
-                                                <td>{{$product->desc}}</td>
-                                                <td>{{$product->inventory->quantity??'Inventory not tracked'}}</td>
+                                                @php
+                                                    $image=explode(',',$product->images);
+                                                @endphp
+                                                <td>
+                                                <a href="#">
+                                                    <img src="{{asset('photos/'.$image[0])}}" height="70" width="70"/>
+                                                </a>
+                                                </td>
+                                                <td>{{$product->title}}</td>
+                                                <td>
+                                                    @if ($product->is_active == 1)
+                                                        <span class="badge badge-success">Active</span>
+                                                    @else
+                                                        <span class="badge badge-danger">InActive</span>
+                                                    @endif
+                                                </td>
+                                                <td>{{$product->inventory?$product->inventory.' in stock':'Inventory not tracked'}}</td>
                                                 <td>{{$product->category->name??''}}</td>
                                                 <td>
                                                     <div class="table-data-feature">
@@ -262,6 +276,9 @@
                                         @endforeach
                                         </tbody>
                                     </table>
+                                    <span>
+                                    {{$products->links()}}
+                                </span>
                                 </div>
                                 <!-- END DATA TABLE -->
                             @endif

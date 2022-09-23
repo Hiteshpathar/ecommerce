@@ -206,7 +206,7 @@
                                             <div class="row">
                                                 <div class="form-group col-lg-6">
                                                     <label>Title</label>
-                                                    <input class="au-input au-input--full" type="text" name="titile"
+                                                    <input class="au-input au-input--full" type="text" name="title"
                                                            placeholder="Short sleeve t-shirt"><br>
                                                     <span style="color: red">@error('title'){{$message}}@enderror</span>
                                                 </div>
@@ -220,7 +220,7 @@
                                             <div class="form-group">
                                                 <label>Descritpion</label>
                                                 <textarea class="form-control" rows="3"
-                                                          placeholder="Product Details"></textarea>
+                                                          placeholder="Product Details" name="description"></textarea>
                                                 <span
                                                     style="color: red">@error('description'){{$message}}@enderror</span>
                                             </div>
@@ -234,27 +234,39 @@
                                                 </div>
                                                 <div class="form-group col-lg-4">
                                                     <label for="sel1">Status</label>
-                                                    <select class="form-control" id="sel1">
-                                                        <option>Active</option>
-                                                        <option>Draft</option>
+                                                    <select class="form-control" id="sel1" name="status">
+                                                        <option value="1">Active</option>
+                                                        <option value="0">Draft</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group col-lg-4">
                                                     <label for="sel1">Type</label>
-                                                    <select class="form-control" id="sel1">
+                                                    <select class="form-control" id="sel1" name="category">
                                                         @foreach($categories as $category)
-                                                            <option>{{$category->name}}</option>
+                                                            <option
+                                                                value="{{$category->id}}">{{$category->name}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label>Media</label>
-                                                <input type="file" name="image" class="form-control" multiple><br>
-                                                <span style="color: red">@error('image'){{$message}}@enderror</span>
+                                            <div class="row">
+                                                <div class="form-group col-lg-8">
+                                                    <label>Media</label>
+                                                    <input type="file" name="images[]" class="form-control"
+                                                           multiple><br>
+                                                    <span style="color: red">@error('images'){{$message}}@enderror</span>
+                                                </div>
+                                                <div class="form-group col-lg-4">
+                                                    <label for="sel1">Discount</label>
+                                                    <select class="form-control" name="discount">
+                                                        @foreach($discounts as $discount)
+                                                            <option
+                                                                value="{{$discount->id}}">{{$discount->name}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit"
-                                                    name="submit">
+                                            <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">
                                                 SAVE
                                             </button>
                                         </form>

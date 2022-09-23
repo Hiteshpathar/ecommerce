@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function test()
     {
-        return User::find(1)->address()->get();
+        return User::find(1)->cart()->get();
     }
 
     public function index(Request $request)
@@ -62,7 +62,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $address = $user->address[0];
+        $address = isset($user->address[0])??[];
         return view('admin/showUser', ['user' => $user,'address'=>$address]);
     }
 

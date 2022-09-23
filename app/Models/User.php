@@ -39,6 +39,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserAddress::class,'user_id','id');
     }
+    public function cart()
+    {
+        return $this->hasMany(Cart::class);
+    }
+    public function orders(){
+        return $this->hasMany(Order::class);
+    }
     public function scopeFilter($query, $filters)
     {
         if (isset($filters['search'])) {

@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
-
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -48,4 +49,7 @@ Route::group(['prefix'=>'admin','middleware'=>'validateAdmin'],function () {
     Route::get('/product/add',[ProductController::class,'create'])->name('add-product');
     Route::post('/product',[ProductController::class,'store'])->name('store-product');
 
+//    Route::get('/cart',[CartController::class,'index'])->name('products-list');
+//    Route::get("test", [UserController::class, 'test']);
+//    Route::get('/test2',[ProductController::class,'test']);
 });
