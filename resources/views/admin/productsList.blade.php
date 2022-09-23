@@ -217,7 +217,7 @@
                                     </div>
                                 </div>
                                 <div class="table-data__tool-right">
-                                    <a href="{{route('add-user')}}" class="btn btn-success">add Product</a>
+                                    <a href="{{route('add-product')}}" class="btn btn-success">add Product</a>
                                 </div>
                             </div>
                             @if(count($products) == 0)
@@ -229,8 +229,8 @@
                                         <tr>
                                             <th>Name</th>
                                             <th>Desciption</th>
-                                            <th>Category</th>
-                                            <th>Quantity</th>
+                                            <th>Inventory</th>
+                                            <th>Type</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -238,8 +238,8 @@
                                             <tr class="tr-shadow" id="sid{{$product->id}}">
                                                 <td>{{$product->name}}</td>
                                                 <td>{{$product->desc}}</td>
-                                                <td>{{$product->category->name}}</td>
-                                                <td>{{$product->inventory->quantity}}</td>
+                                                <td>{{$product->inventory->quantity??'Inventory not tracked'}}</td>
+                                                <td>{{$product->category->name??''}}</td>
                                                 <td>
                                                     <div class="table-data-feature">
                                                         <a href="{{ route('edit-user',$product->id)}}"

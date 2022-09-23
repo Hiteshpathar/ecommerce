@@ -45,4 +45,7 @@ Route::group(['prefix'=>'admin','middleware'=>'validateAdmin'],function () {
     Route::get('approve/{id}/{is_approved}', [UserController::class, 'approve'])->name('approve-user');
 
     Route::get('/products',[ProductController::class,'index'])->name('products-list');
+    Route::get('/product/add',[ProductController::class,'create'])->name('add-product');
+    Route::post('/product',[ProductController::class,'store'])->name('store-product');
+
 });

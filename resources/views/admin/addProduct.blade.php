@@ -200,72 +200,59 @@
                                 <div class="card-body">
                                     <div class="login-form">
 
-                                        <form action="{{route('store-user')}}" method="post"
+                                        <form action="{{route('store-product')}}" method="post"
                                               enctype="multipart/form-data">
                                             @csrf
                                             <div class="row">
-                                                <div class="form-group col-md-4">
-                                                    <label>First Name</label>
-                                                    <input class="au-input au-input--full" type="text" name="first_name"
-                                                           placeholder="First Name"><br>
-                                                    <span
-                                                        style="color: red">@error('first_name'){{$message}}@enderror</span>
+                                                <div class="form-group col-lg-6">
+                                                    <label>Title</label>
+                                                    <input class="au-input au-input--full" type="text" name="titile"
+                                                           placeholder="Short sleeve t-shirt"><br>
+                                                    <span style="color: red">@error('title'){{$message}}@enderror</span>
                                                 </div>
-                                                <div class="form-group col-md-4">
-                                                    <label>Last Name</label>
-                                                    <input class="au-input au-input--full" type="text" name="last_name"
-                                                           placeholder="Last Name"><br>
-                                                    <span
-                                                        style="color: red">@error('last_name'){{$message}}@enderror</span>
-                                                </div>
-                                                <div class="form-group col-md-4">
-                                                    <label>Email Address</label>
-                                                    <input class="au-input au-input--full" type="email" name="email"
-                                                           placeholder="Email"><br>
-                                                    <span style="color: red">@error('email'){{$message}}@enderror</span>
+                                                <div class="form-group col-lg-6">
+                                                    <label>Price</label>
+                                                    <input class="au-input au-input--full" type="text" name="price"
+                                                           placeholder="₹ 0.00"><br>
+                                                    <span style="color: red">@error('price'){{$message}}@enderror</span>
                                                 </div>
                                             </div>
-
                                             <div class="form-group">
-                                                <label>Mobile Number</label>
-                                                <input class="au-input au-input--full" type="number" name="mobile"
-                                                       placeholder="Mobile Number"><br>
-                                                <span style="color: red">@error('email'){{$message}}@enderror</span>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Address Line 1</label>
-                                                <input class="au-input au-input--full" type="text" name="address1"
-                                                       placeholder="Address Line 1"><br>
-                                                <span style="color: red">@error('address1'){{$message}}@enderror</span>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Address Line 2</label>
-                                                <input class="au-input au-input--full" type="text" name="address2"
-                                                       placeholder="Address Line 2"><br>
-                                                <span style="color: red">@error('address2'){{$message}}@enderror</span>
+                                                <label>Descritpion</label>
+                                                <textarea class="form-control" rows="3"
+                                                          placeholder="Product Details"></textarea>
+                                                <span
+                                                    style="color: red">@error('description'){{$message}}@enderror</span>
                                             </div>
                                             <div class="row">
-                                                <div class="form-group col-md-6">
-                                                    <label>City</label>
-                                                    <input class="au-input au-input--full" type="text" name="city"
-                                                           placeholder="City"><br>
-                                                    <span style="color: red">@error('city'){{$message}}@enderror</span>
-                                                </div>
-                                                <div class="form-group col-md-6">
-                                                    <label>Postal Code</label>
-                                                    <input class="au-input au-input--full" type="number"
-                                                           name="postal_code"
-                                                           placeholder="Postal Code"><br>
+                                                <div class="form-group col-lg-4">
+                                                    <label>Quantity</label>
+                                                    <input class="au-input au-input--full" type="number" name="quantity"
+                                                           value="0"><br>
                                                     <span
-                                                        style="color: red">@error('postal_code'){{$message}}@enderror</span>
+                                                        style="color: red">@error('quantity'){{$message}}@enderror</span>
+                                                </div>
+                                                <div class="form-group col-lg-4">
+                                                    <label for="sel1">Status</label>
+                                                    <select class="form-control" id="sel1">
+                                                        <option>Active</option>
+                                                        <option>Draft</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-lg-4">
+                                                    <label for="sel1">Type</label>
+                                                    <select class="form-control" id="sel1">
+                                                        @foreach($categories as $category)
+                                                            <option>{{$category->name}}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label>Profile Image</label>
-                                                <input type="file" name="image"><br>
+                                                <label>Media</label>
+                                                <input type="file" name="image" class="form-control" multiple><br>
                                                 <span style="color: red">@error('image'){{$message}}@enderror</span>
                                             </div>
-                                            <input type="hidden" name="id">
                                             <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit"
                                                     name="submit">
                                                 SAVE
