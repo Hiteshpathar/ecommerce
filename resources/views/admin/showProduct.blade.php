@@ -216,27 +216,26 @@
                                 <div class="card-body">
                                     <div class="login-form">
 
-                                        <form action="{{route('store-product')}}" method="post"
+                                        <form action="{{route('update-product')}}" method="post"
                                               enctype="multipart/form-data">
                                             @csrf
                                             <div class="row">
                                                 <div class="form-group col-lg-6">
                                                     <label>Title</label>
                                                     <input class="au-input au-input--full" type="text" name="title"
-                                                           placeholder="Short sleeve t-shirt"><br>
+                                                           value="{{$product->title}}"><br>
                                                     <span style="color: red">@error('title'){{$message}}@enderror</span>
                                                 </div>
                                                 <div class="form-group col-lg-6">
                                                     <label>Price</label>
                                                     <input class="au-input au-input--full" type="text" name="price"
-                                                           placeholder="₹ 0.00"><br>
+                                                           value="{{$product->price}}"><br>
                                                     <span style="color: red">@error('price'){{$message}}@enderror</span>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label>Descritpion</label>
-                                                <textarea class="form-control" rows="3"
-                                                          placeholder="Product Details" name="description"></textarea>
+                                                <textarea class="form-control" rows="3" name="description">{{$product->description}}</textarea>
                                                 <span
                                                     style="color: red">@error('description'){{$message}}@enderror</span>
                                             </div>
@@ -244,15 +243,15 @@
                                                 <div class="form-group col-lg-4">
                                                     <label>Quantity</label>
                                                     <input class="au-input au-input--full" type="number" name="quantity"
-                                                           value="0"><br>
+                                                           value="{{$product->inventory??'0'}}"><br>
                                                     <span
                                                         style="color: red">@error('quantity'){{$message}}@enderror</span>
                                                 </div>
                                                 <div class="form-group col-lg-4">
                                                     <label for="sel1">Status</label>
-                                                    <select class="form-control" id="sel1" name="status">
-                                                        <option value="1">Active</option>
-                                                        <option value="0">Draft</option>
+                                                    <select class="form-control" id="sel1" name="is_active">
+                                                        <option value="1" {{$product->is_active==1?'selected':''}}>Active</option>
+                                                        <option value="0" {{$product->is_active==0?'selected':''}}>Draft</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group col-lg-4">
@@ -260,7 +259,7 @@
                                                     <select class="form-control" id="sel1" name="category">
                                                         @foreach($categories as $category)
                                                             <option
-                                                                value="{{$category->id}}">{{$category->name}}</option>
+                                                                value="{{$category->id}}" {{$category->id==$product->category_id?'selected':''}}>{{$category->name}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -277,11 +276,12 @@
                                                     <select class="form-control" name="discount">
                                                         @foreach($discounts as $discount)
                                                             <option
-                                                                value="{{$discount->id}}">{{$discount->name}}</option>
+                                                                value="{{$discount->id}}" {{$product->discount_id==$discount->id?'selected':''}}>{{$discount->name}}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                             </div>
+                                            <input type="hidden" value="{{$product->id}}" name="id">
                                             <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">
                                                 SAVE
                                             </button>

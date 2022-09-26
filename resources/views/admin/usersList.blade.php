@@ -66,12 +66,24 @@
             <div class="container-fluid">
                 <ul class="navbar-mobile__list list-unstyled">
                     <li class="has-sub">
+                        <a class="js-arrow" href="">
+                            <i class="fas fa-home"></i>Home</a>
+                    </li>
+                    <li class="{{ isset($orders) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('orders-list')}}">
+                            <i class="fas fa-cart-plus"></i>Orders</a>
+                    </li>
+                    <li class="{{ isset($users) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('users-list')}}">
                             <i class="fas fa-user"></i>Users</a>
                     </li>
-                    <li class="active has-sub">
+                    <li class="{{ isset($products) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('products-list')}}">
-                            <i class="fas fa-user"></i>Products</a>
+                            <i class="fas fa-shopping-bag"></i>Products</a>
+                    </li>
+                    <li class="{{ isset($collections) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('collections-list')}}">
+                            <i class="fas fa-shopping-bag"></i>Collections</a>
                     </li>
                 </ul>
             </div>
@@ -89,13 +101,25 @@
         <div class="menu-sidebar__content js-scrollbar1">
             <nav class="navbar-sidebar">
                 <ul class="list-unstyled navbar__list">
+                    <li class="has-sub">
+                        <a class="js-arrow" href="{{'dashboard'}}">
+                            <i class="fas fa-home"></i>Home</a>
+                    </li>
+                    <li class="{{ isset($orders) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('orders-list')}}">
+                            <i class="fas fa-cart-plus"></i>Orders</a>
+                    </li>
                     <li class="{{ isset($users) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('users-list')}}">
                             <i class="fas fa-user"></i>Users</a>
                     </li>
                     <li class="{{ isset($products) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('products-list')}}">
-                            <i class="fas fa-user"></i>Products</a>
+                            <i class="fas fa-shopping-bag"></i>Products</a>
+                    </li>
+                    <li class="{{ isset($collections) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('collections-list')}}">
+                            <i class="fas fa-shopping-bag"></i>Collections</a>
                     </li>
                 </ul>
             </nav>
@@ -263,10 +287,13 @@
                                     <table class="table table-data2">
                                         <thead>
                                         <tr>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Email</th>
+                                            <th>@sortablelink('first_name', 'First Name')</th>
+                                            <th>@sortablelink('last_name','Last Name')</th>
+                                            <th>@sortablelink('email','Email')</th>
+                                            <td>Location</td>
                                             <th>Status</th>
+                                            <th>Orders</th>
+                                            <th>Spent</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -274,19 +301,28 @@
                                             <tr class="tr-shadow" id="sid{{$user->id}}">
                                                 <td>{{$user->first_name}}</td>
                                                 <td>{{$user->last_name}}</td>
-                                                <td>{{$user->email}}</td>
+                                                <td><span class="block-email">{{$user->email}}</span></td>
+                                                <td>{{$user->city?$user->city.', '.$user->country:$user->country}}</td>
                                                 <td>
                                                     @if ($user->is_active == 1)
-                                                        <a href="{{route('approve-user',[$user->id,$user->is_active])}}"
-                                                           class="btn btn-sm btn-success">Active</a>
+                                                        <span class="status--process">Active</span>
                                                     @else
-                                                        <a href="{{route('approve-user',[$user->id,$user->is_active])}}"
-                                                           class="btn btn-sm btn-danger"> Inactive</a>
+                                                        <span class="status--denied">InActive</span>
                                                     @endif
+                                                </td>
+                                                <td>{{count($user->orders)==0?'0 Orders':count($user->orders).' Orders'}}</td>
+                                                <td>
+                                                    @php
+                                                    $total_spent = 0;
+                                                        foreach($user->orders as $order){
+                                                            $total_spent += $order->total_amount;
+                                                        }
+                                                        echo '₹ '.$total_spent;
+                                                    @endphp
                                                 </td>
                                                 <td>
                                                     <div class="table-data-feature">
-                                                        <a href="{{ route('edit-user',$user->id)}}"
+                                                        <a href="{{route('edit-user',$user->id)}}"
                                                            class="item"
                                                            data-toggle="tooltip" data-placement="top" title="Details">
                                                             <i class="zmdi zmdi-eye"></i>
@@ -298,7 +334,7 @@
                                                         <a href="{{ route('send-mail',$user->id)}}"
                                                            class="item"
                                                            data-toggle="tooltip" data-placement="top" title="Send Mail">
-                                                            <i class="zmdi zmdi-email"></i>
+                                                            <i class="zmdi {{$user->is_email_sent?'zmdi-check-all':'zmdi-email'}}"></i>
                                                         </a>
                                                     </div>
                                                 </td>

@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\DashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,18 +39,20 @@ Route::group(['prefix'=>'admin','middleware'=>'validateAdmin'],function () {
         return view('admin/addUser');
     })->name('add-user');
     Route::post('/user',[UserController::class,'store'])->name('store-user');
-    Route::get("edit/{id}", [UserController::class, 'edit'])->name('edit-user');
-    Route::post('/user/update', [UserController::class, 'update'])->name('update-user');
+    Route::get("user/edit/{id}", [UserController::class, 'edit'])->name('edit-user');
+    Route::post('user/update', [UserController::class, 'update'])->name('update-user');
     Route::get("send-mail/{id}", [UserController::class, 'sendMail'])->name('send-mail');
-    Route::get('/user/{id}',[UserController::class,'show'])->name('user-by-id');
-    Route::delete('/user/{id}',[UserController::class,'destroy'])->name('delete-user');
-    Route::get('approve/{id}/{is_approved}', [UserController::class, 'approve'])->name('approve-user');
+    Route::get('user/{id}',[UserController::class,'show'])->name('user-by-id');
+    Route::delete('user/{id}',[UserController::class,'destroy'])->name('delete-user');
 
     Route::get('/products',[ProductController::class,'index'])->name('products-list');
     Route::get('/product/add',[ProductController::class,'create'])->name('add-product');
     Route::post('/product',[ProductController::class,'store'])->name('store-product');
+    Route::get("product/edit/{id}", [ProductController::class, 'edit'])->name('edit-product');
+    Route::post('/product/update', [ProductController::class, 'update'])->name('update-product');
+    Route::delete('product/{id}',[ProductController::class,'destroy'])->name('delete-product');
 
-//    Route::get('/cart',[CartController::class,'index'])->name('products-list');
-//    Route::get("test", [UserController::class, 'test']);
-//    Route::get('/test2',[ProductController::class,'test']);
+    Route::get('/orders',[OrderController::class,'index'])->name('orders-list');
+    Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard');
+    Route::get('/collections',[ProductController::class,'collections'])->name('collections-list');
 });

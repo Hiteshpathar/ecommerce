@@ -25,4 +25,17 @@ class Product extends Model
     {
         return $this->hasmany(Cart::class);
     }
+    public function discount()
+    {
+        return $this->hasmany(Discount::class,'id','discount_id');
+    }
+    public function scopeFilter($query, $filters)
+    {
+        if (isset($filters['search'])) {
+            $query->where('title', 'LIKE', '%' . $filters['search'] . '%');
+        }
+        if (isset($filters['status'])){
+            $query->where('is_active',$filters['status']);
+        }
+    }
 }

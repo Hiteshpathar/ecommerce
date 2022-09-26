@@ -1,18 +1,20 @@
 {{--<h1>Welcome {{$name}} ,</h1><br>--}}
 {{--<h2>Your Password is :-{{$password}}</h2>--}}
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="x-apple-disable-message-reformatting" />
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="supported-color-schemes" content="light dark" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="x-apple-disable-message-reformatting"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="color-scheme" content="light dark"/>
+    <meta name="supported-color-schemes" content="light dark"/>
     <title></title>
     <style type="text/css" rel="stylesheet" media="all">
         /* Base ------------------------------ */
 
         @import url("https://fonts.googleapis.com/css?family=Nunito+Sans:400,700&display=swap");
+
         body {
             width: 100% !important;
             height: 100%;
@@ -43,6 +45,7 @@
             opacity: 0;
             overflow: hidden;
         }
+
         /* Type ------------------------------ */
 
         body,
@@ -92,6 +95,7 @@
         p.sub {
             font-size: 13px;
         }
+
         /* Utilities ------------------------------ */
 
         .align-right {
@@ -109,6 +113,7 @@
         .u-margin-bottom-none {
             margin-bottom: 0;
         }
+
         /* Buttons ------------------------------ */
 
         .button {
@@ -148,6 +153,7 @@
                 text-align: center !important;
             }
         }
+
         /* Attribute list ------------------------------ */
 
         .attributes {
@@ -162,6 +168,7 @@
         .attributes_item {
             padding: 0;
         }
+
         /* Related Items ------------------------------ */
 
         .related {
@@ -195,6 +202,7 @@
             text-align: center;
             padding: 25px 0 10px;
         }
+
         /* Discount Code ------------------------------ */
 
         .discount {
@@ -216,6 +224,7 @@
             text-align: center;
             font-size: 15px;
         }
+
         /* Social Icons ------------------------------ */
 
         .social {
@@ -232,6 +241,7 @@
             margin: 0 8px 10px 8px;
             padding: 0;
         }
+
         /* Data table ------------------------------ */
 
         .purchase {
@@ -313,6 +323,7 @@
             -premailer-cellpadding: 0;
             -premailer-cellspacing: 0;
         }
+
         /* Masthead ----------------------- */
 
         .email-masthead {
@@ -331,6 +342,7 @@
             text-decoration: none;
             text-shadow: 0 1px 0 white;
         }
+
         /* Body ------------------------------ */
 
         .email-body {
@@ -385,6 +397,7 @@
         .content-cell {
             padding: 45px;
         }
+
         /*Media Queries ------------------------------ */
 
         @media only screen and (max-width: 600px) {
@@ -405,6 +418,7 @@
                 background-color: #333333 !important;
                 color: #FFF !important;
             }
+
             p,
             ul,
             ol,
@@ -416,10 +430,12 @@
             .purchase_item {
                 color: #FFF !important;
             }
+
             .attributes_content,
             .discount {
                 background-color: #222 !important;
             }
+
             .email-masthead_name {
                 text-shadow: none !important;
             }
@@ -432,7 +448,7 @@
     </style>
     <!--[if mso]>
     <style type="text/css">
-        .f-fallback  {
+        .f-fallback {
             font-family: Arial, sans-serif;
         }
     </style>
@@ -454,19 +470,23 @@
                 <!-- Email Body -->
                 <tr>
                     <td class="email-body" width="570" cellpadding="0" cellspacing="0">
-                        <table class="email-body_inner" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                        <table class="email-body_inner" align="center" width="570" cellpadding="0" cellspacing="0"
+                               role="presentation">
                             <!-- Body content -->
                             <tr>
                                 <td class="content-cell">
                                     <div class="f-fallback">
                                         <h1>Welcome, {{$name}}!</h1>
-                                        <p>Thanks for trying [Product Name]. We’re thrilled to have you on board. To get the most out of [Product Name], do this primary next step:</p>
+                                        <p>Thanks for trying [Product Name]. We’re thrilled to have you on board. To get
+                                            the most out of [Product Name], do this primary next step:</p>
                                         <!-- Action -->
                                         <p>For reference, here's your login information:</p>
-                                        <table class="attributes" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                                        <table class="attributes" width="100%" cellpadding="0" cellspacing="0"
+                                               role="presentation">
                                             <tr>
                                                 <td class="attributes_content">
-                                                    <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                                                    <table width="100%" cellpadding="0" cellspacing="0"
+                                                           role="presentation">
                                                         <tr>
                                                             <td class="attributes_item">
                                     <span class="f-fallback">
@@ -485,19 +505,7 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                        <p>If you have any questions, feel free to <a href="mailto:{{$from}}">email our customer success team</a>. (We're lightning quick at replying.) We also offer <a href="">live chat</a> during business hours.</p>
-                                        <p>Thanks,
-                                            <br>[Sender Name] and the [Product Name] team</p>
-                                        <p><strong>P.S.</strong> Need immediate help getting started? Check out our <a href="">help documentation</a>. Or, just reply to this email, the [Product Name] support team is always ready to help!</p>
-                                        <!-- Sub copy -->
-                                        <table class="body-sub" role="presentation">
-                                            <tr>
-                                                <td>
-                                                    <p class="f-fallback sub">If you’re having trouble with the button above, copy and paste the URL below into your web browser.</p>
-                                                    <p class="f-fallback sub"></p>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                        <button><a href="http://ecommerce.localhost/admin/test/1">yes</a></button>
                                     </div>
                                 </td>
                             </tr>
@@ -506,7 +514,8 @@
                 </tr>
                 <tr>
                     <td>
-                        <table class="email-footer" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                        <table class="email-footer" align="center" width="570" cellpadding="0" cellspacing="0"
+                               role="presentation">
                             <tr>
                                 <td class="content-cell" align="center">
                                     <p class="f-fallback sub align-center">

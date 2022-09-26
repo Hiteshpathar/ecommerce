@@ -11,7 +11,7 @@
     <meta name="keywords" content="au theme template">
 
     <!-- Title Page-->
-    <title>Product Management</title>
+    <title>User Management</title>
 
     <!-- Fontfaces CSS-->
     {{--    <link rel="stylesheet" href="{{asset('css/style.css')}}">--}}
@@ -37,7 +37,6 @@
     <link href="{{asset('css/theme.css')}}" rel="stylesheet" media="all">
     {{-- Toaster --}}
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.0/css/toastr.css" rel="stylesheet"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
     <style>
         .table-data2.table tbody tr td {
             vertical-align: baseline !important;
@@ -52,8 +51,8 @@
         <div class="header-mobile__bar">
             <div class="container-fluid">
                 <div class="header-mobile-inner">
-                    <a class="logo" href="/">
-                        <img src="images/icon/logo.png" alt="CoolAdmin"/>
+                    <a href="#">
+                        <img src="{{asset("images/icon/logo.png")}}" alt="Cool Admin"/>
                     </a>
                     <button class="hamburger hamburger--slider" type="button">
                             <span class="hamburger-box">
@@ -67,7 +66,7 @@
             <div class="container-fluid">
                 <ul class="navbar-mobile__list list-unstyled">
                     <li class="has-sub">
-                        <a class="js-arrow" href="{{'dashboard'}}">
+                        <a class="js-arrow" href="">
                             <i class="fas fa-home"></i>Home</a>
                     </li>
                     <li class="{{ isset($orders) ? 'active' : ''  }} has-sub">
@@ -99,7 +98,7 @@
             <nav class="navbar-sidebar">
                 <ul class="list-unstyled navbar__list">
                     <li class="has-sub">
-                        <a class="js-arrow" href="">
+                        <a class="js-arrow" href="{{'dashboard'}}">
                             <i class="fas fa-home"></i>Home</a>
                     </li>
                     <li class="{{ isset($orders) ? 'active' : ''  }} has-sub">
@@ -127,13 +126,82 @@
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
                     <div class="header-wrap">
-                        <form class="form-header" action="" method="get">
-                            <input class="au-input au-input--xl" type="text" name="search"
-                                   placeholder="Search for datas &amp; reports..."/>
-                            <button class="au-btn--submit" type="submit" name="searching">
+                        @php
+                            isset($_GET['search'])?$search=$_GET['search']:$search=''
+                        @endphp
+                        <form class="form-header" action="" method="get" id="search_form">
+                            <input class="au-input au-input--xl" id="search" type="text" name="search"
+                                   value="{{$search}}"
+                                   placeholder="Search for First Name, Last Name &amp; Email..."/>
+                            <button class="au-btn--submit" type="submit">
                                 <i class="zmdi zmdi-search"></i>
                             </button>
                         </form>
+                        <div class="header-button">
+                            {{--                                <div class="noti-wrap">--}}
+                            {{--                                    <div class="noti__item js-item-menu">--}}
+                            {{--                                        <i class="zmdi zmdi-notifications"></i>--}}
+                            {{--                                        <span class="quantity">{{$totalPendingRequests}}</span>--}}
+                            {{--                                        <div class="notifi-dropdown js-dropdown">--}}
+                            {{--                                            <div class="notifi__title">--}}
+
+                            {{--                                                <p>You have {{$totalPendingRequests}} pending requests</p>--}}
+                            {{--                                            </div>--}}
+                            {{--                                            @foreach($students as $student)--}}
+                            {{--                                                @if($student->is_approved == 0)--}}
+                            {{--                                                    <div class="notifi__item">--}}
+                            {{--                                                        <div class="bg-c1 img-cir img-40">--}}
+                            {{--                                                            <a href="{{route('approve-student',[$student->id,$student->is_approved])}}"><i--}}
+                            {{--                                                                    class="fa fa-check" aria-hidden="true"></i></a>--}}
+                            {{--                                                        </div>--}}
+                            {{--                                                        <div class="content">--}}
+                            {{--                                                            {{$student->first_name.' '.$student->last_name}} wants to--}}
+                            {{--                                                            login--}}
+                            {{--                                                        </div>--}}
+                            {{--                                                    </div>--}}
+                            {{--                                                @endif--}}
+                            {{--                                            @endforeach--}}
+                            {{--                                        </div>--}}
+                            {{--                                    </div>--}}
+                            {{--                                </div>--}}
+                            <div class="account-wrap">
+                                <div class="account-item clearfix js-item-menu">
+                                    <div class="content">
+                                        <a class="js-acc-btn" href="#">{{session('admin')->first_name}}</a>
+                                    </div>
+                                    <div class="account-dropdown js-dropdown">
+                                        <div class="info clearfix">
+                                            <div class="image">
+                                                <img src="" alt="Admin"/>
+                                            </div>
+                                            <div class="content">
+                                                <h5 class="name">
+                                                    <a href="#">{{session('admin')->first_name}}</a>
+                                                </h5>
+                                                <span class="email">{{session('admin')->email}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="account-dropdown__body">
+                                            <div class="account-dropdown__item">
+                                                <a href="{{ route('edit-admin-profile',session('admin')) }}">
+                                                    <i class="zmdi zmdi-account"></i>Account</a>
+                                            </div>
+                                        </div>
+                                        <div class="account-dropdown__body">
+                                            <div class="account-dropdown__item">
+                                                <a href="{{route('reset-admin-password')}}">
+                                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>Reset
+                                                    Password</a>
+                                            </div>
+                                        </div>
+                                        <div class="account-dropdown__footer">
+                                            <a href="{{route('admin-logout')}}">
+                                                <i class="zmdi zmdi-power"></i>Logout</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -141,6 +209,30 @@
         <!-- HEADER DESKTOP-->
 
         <!-- MAIN CONTENT-->
+        {{--        END DELETE CONFIRMATION MODAL--}}
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{--        END DELETE CONFIRMATION MODAL--}}
+
         <div class="main-content">
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
@@ -156,10 +248,11 @@
                                         <form method="get">
                                             <div class="table-data__tool-left">
                                                 <div class="rs-select2--light rs-select2--md">
+
                                                     <select class="js-select2" name="status"
                                                             onchange="this.form.submit()">
                                                         <option value="" {{ $status =='all' ? 'selected' : ''  }}>
-                                                            All Products
+                                                            All Orders
                                                         </option>
                                                         <option value="1"{{ $status ==1 ? 'selected' : ''  }} >
                                                             Active
@@ -176,52 +269,43 @@
                                     </div>
                                 </div>
                                 <div class="table-data__tool-right">
-                                    <a href="{{route('add-product')}}" class="btn btn-success">add Product</a>
+                                    <a href="{{route('add-user')}}" class="btn btn-success">Create Order</a>
                                 </div>
                             </div>
-                            @if(count($products) == 0)
+                            @if(count($orders) == 0)
                                 <h2>No data found</h2>
                             @else
                                 <div class="table-responsive table-responsive-data2">
                                     <table class="table table-data2">
                                         <thead>
                                         <tr>
-                                            <th></th>
+                                            <th>Order No.</th>
+                                            <th>Date</th>
                                             <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Items</th>
+                                            <th>Total Amount</th>
                                             <th>Status</th>
-                                            <th>Inventory</th>
-                                            <th>Type</th>
-                                            <th>Discount</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach($products as $product)
-                                            <tr class="tr-shadow" id="sid{{$product->id}}">
-                                                @php
-                                                    $image=explode(',',$product->images);
-                                                @endphp
+                                        @foreach($orders as $order)
+                                            <tr class="tr-shadow" id="sid{{$order->id}}">
+                                                <td>{{$order->order_number}}</td>
+                                                <td>{{$order->created_at->format('d M Y')}}</td>
+                                                <td>{{$order->user->full_name}}</td>
+                                                <td><span class="block-email">{{$order->user->email}}</span></td>
+                                                <td>{{$order->quantity}} Items</td>
+                                                <td>{{$order->total_amount}}</td>
                                                 <td>
-                                                <a href="#">
-                                                    <img src="{{asset('photos/'.$image[0])}}" height="70" width="70"/>
-                                                </a>
+                                                    <span class="">{{$order->status}}</span>
                                                 </td>
-                                                <td>{{$product->title}}</td>
-                                                <td>
-                                                    @if ($product->is_active == 1)
-                                                        <span class="status--process">Active</span>
-                                                    @else
-                                                        <span class="status--denied">InActive</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{$product->inventory?$product->inventory.' in stock':'Inventory not tracked'}}</td>
-                                                <td>{{$product->category->name??''}}</td>
-                                                <td>{{$product->discount[0]->discount_percent}} %</td>
                                                 <td>
                                                     <div class="table-data-feature">
-                                                        <a href="{{ route('edit-product',$product->id)}}"
+                                                        <a href="{{route('edit-user',$order->id)}}"
                                                            class="item"
-                                                           data-toggle="tooltip" data-placement="top" title="Edit">
-                                                            <i class="zmdi zmdi-edit"></i>
+                                                           data-toggle="tooltip" data-placement="top" title="Details">
+                                                            <i class="zmdi zmdi-eye"></i>
                                                         </a>
                                                     </div>
                                                 </td>
@@ -229,7 +313,7 @@
                                                     <div class="table-data-feature">
                                                         <a href="javascript:void(0)" class="item" data-toggle="tooltip"
                                                            data-placement="top"
-                                                           onclick="deleteProduct({{$product->id}})">
+                                                           onclick="deleteUser({{$order->id}})">
                                                             <i class="zmdi zmdi-delete"></i>
                                                         </a>
                                                     </div>
@@ -239,7 +323,7 @@
                                         </tbody>
                                     </table>
                                     <span>
-                                    {{$products->links()}}
+                                    {{$orders->links()}}
                                 </span>
                                 </div>
                                 <!-- END DATA TABLE -->
@@ -280,7 +364,6 @@
 <script src="{{asset('js/main.js')}}"></script>
 {{-- Toaster --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.0/js/toastr.js"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 
 <script>
     $(document).ready(function () {
@@ -293,11 +376,11 @@
     });
 </script>
 <script type="text/javascript">
-    function deleteProduct(id) {
+    function deleteUser(id) {
 
-        var url = "{{ route('delete-product', ":id") }}";
+        var url = "{{ route('delete-user', ":id") }}";
         url = url.replace(':id', id);
-        // if(confirm('Do you really want to delete this record?')){
+
         $.ajax({
             url: url,
             type: 'post',
@@ -313,11 +396,6 @@
             }
         })
     }
-    $(document).ready(function () {
-        $('#table-data2').DataTable({
-            order: [[3, 'desc']],
-        });
-    });
 </script>
 </body>
 

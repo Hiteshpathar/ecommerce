@@ -10,14 +10,18 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    public function test()
+    public function test($is_approved)
     {
-        return User::find(1)->cart()->get();
+        return $is_approved==1?'approved':'not_approved';
     }
 
     public function index(Request $request)
     {
-        $users = User::filter($request->only('search', 'status'))->paginate(25);
+        $sort = $request->sort ?? 'created_at';
+        $order = 'desc';
+        $query = User::Sortable()->filter($request->only('search', 'status'));
+        $query = $query->orderBy($sort, $order);
+        $users = $query->paginate(25);
         return view('admin/usersList', ['users' => $users]);
     }
 
@@ -45,16 +49,13 @@ class UserController extends Controller
             $user->email = $request->input('email');
             $user->password = Str::random(10);
             $user->mobile = $request->input('mobile') ?? '';
-//            $file = Storage::disk('public')->putFile('images',$request->file('image'));
-//            $name = explode('/',$file);
-//            $user->image = $name[1];
+            $user->is_active = $request->input('status') ?? '';
+            $user->address1 = $request->input('address1')??'';
+            $user->address2 = $request->input('address2')??'';
+            $user->city = $request->input('city')??'';
+            $user->country = $request->input('country')??'';
+            $user->postal_code = $request->input('postal_code')??'';
             $user->save();
-            $user->address()->create([
-                'address1' => $request->input('address1'),
-                'address2' => $request->input('address2') ?? '',
-                'city' => $request->input('city') ?? '',
-                'postal_code' => $request->input('postal_code')
-            ]);
             return redirect()->route('users-list')->with('success', 'User added');
         }
     }
@@ -62,8 +63,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $address = isset($user->address[0])??[];
-        return view('admin/showUser', ['user' => $user,'address'=>$address]);
+        return view('admin/showUser', ['user' => $user]);
     }
 
     public function update(Request $request)
@@ -74,40 +74,21 @@ class UserController extends Controller
         $user->email = $request->input('email');
         $user->password = Str::random(10);
         $user->mobile = $request->input('mobile') ?? '';
-//            $file = Storage::disk('public')->putFile('images',$request->file('image'));
-//            $name = explode('/',$file);
-//            $user->image = $name[1];
-        $user->address()->update([
-            'address1' => $request->input('address1'),
-            'address2' => $request->input('address2') ?? '',
-            'city' => $request->input('city') ?? '',
-            'postal_code' => $request->input('postal_code')
-        ]);
-//        if ($request->image == null) {
-//            $student->image = $student->image;
-//        } else {
-//            $file = Storage::disk('public')->putFile('images', $request->file('image'));
-//            $name = explode('/', $file);
-//            $student->image = $name[1];
-//        }
+        $user->is_active = $request->input('status') ?? '';
+        $user->address1 = $request->input('address1')??'';
+        $user->address2 = $request->input('address2')??'';
+        $user->city = $request->input('city')??'';
+        $user->country = $request->input('country')??'';
+        $user->postal_code = $request->input('postal_code')??'';
         $user->save();
         return redirect()->route('users-list')->with('success', 'User updates successfully');
 
     }
 
-    public
-    function approve($id, $is_active)
+    function sendMail($id)
     {
         $user = User::find($id);
-        $is_active == 1 ? $user->is_active = 0 : $user->is_active = 1;
-        $user->save();
-        return redirect()->route('users-list')->with('success', 'status changed successfully');
-    }
 
-    public
-    function sendMail(Request $request)
-    {
-        $user = User::find($request->id)->first();
         $name = $user->first_name . ' ' . $user->last_name;
         $data = ['name' => $name,
             'password' => $user->password,
@@ -115,11 +96,12 @@ class UserController extends Controller
             'from' => 'admin@gmail.com',
             'subject' => 'Your Credentials from ...'];
 
+        $user->is_email_sent = true;
+        $user->save();
         SendEmailJob::dispatch($data);
         return redirect()->back()->with('success', 'Mail Sent Successfully');
     }
 
-    public
     function destroy($id)
     {
         User::find($id)->delete();

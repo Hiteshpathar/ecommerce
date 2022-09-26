@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Kyslik\ColumnSortable\Sortable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable,SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable,SoftDeletes,Sortable;
 
     /**
      * The attributes that are mass assignable.
@@ -26,6 +27,12 @@ class User extends Authenticatable
         'mobile',
     ];
 
+    protected $sortable = [
+        'first_name',
+        'last_name',
+        'email'
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -35,9 +42,9 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-    public function address()
+    public function getFullNameAttribute()
     {
-        return $this->hasMany(UserAddress::class,'user_id','id');
+        return $this->first_name . ' ' . $this->last_name;
     }
     public function cart()
     {

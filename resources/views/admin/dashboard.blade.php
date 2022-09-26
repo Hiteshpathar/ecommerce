@@ -65,19 +65,19 @@
         <nav class="navbar-mobile">
             <div class="container-fluid">
                 <ul class="navbar-mobile__list list-unstyled">
-                    <li class="has-sub">
+                    <li class="has-sub" active>
                         <a class="js-arrow" href="{{'dashboard'}}">
                             <i class="fas fa-home"></i>Home</a>
                     </li>
-                    <li class="{{ isset($orders) ? 'active' : ''  }} has-sub">
+                    <li class="has-sub">
                         <a class="js-arrow" href="{{route('orders-list')}}">
                             <i class="fas fa-cart-plus"></i>Orders</a>
                     </li>
-                    <li class="{{ isset($users) ? 'active' : ''  }} has-sub">
+                    <li class="has-sub">
                         <a class="js-arrow" href="{{route('users-list')}}">
                             <i class="fas fa-user"></i>Users</a>
                     </li>
-                    <li class="{{ isset($products) ? 'active' : ''  }} has-sub">
+                    <li class="has-sub">
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-shopping-bag"></i>Products</a>
                     </li>
@@ -97,19 +97,19 @@
         <div class="menu-sidebar__content js-scrollbar1">
             <nav class="navbar-sidebar">
                 <ul class="list-unstyled navbar__list">
-                    <li class="has-sub">
+                    <li class="has-sub active">
                         <a class="js-arrow" href="{{'dashboard'}}">
                             <i class="fas fa-home"></i>Home</a>
                     </li>
-                    <li class="{{ isset($orders) ? 'active' : ''  }} has-sub">
+                    <li class="has-sub">
                         <a class="js-arrow" href="{{route('orders-list')}}">
                             <i class="fas fa-cart-plus"></i>Orders</a>
                     </li>
-                    <li class="{{ isset($users) ? 'active' : ''  }} has-sub">
+                    <li class="has-sub">
                         <a class="js-arrow" href="{{route('users-list')}}">
                             <i class="fas fa-user"></i>Users</a>
                     </li>
-                    <li class="{{ isset($products) ? 'active' : ''  }} has-sub">
+                    <li class="has-sub">
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-shopping-bag"></i>Products</a>
                     </li>
@@ -206,86 +206,84 @@
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class=" card-header login-logo">
-                                    <a href="#">
-                                        <img src="{{asset('images/icon/logo.png')}}" alt="CoolAdmin">
-                                    </a>
+                        <div class="col-md-12">
+                            <div class="overview-wrap">
+                                <h2 class="title-1">overview</h2>
+                                <button class="au-btn au-btn-icon au-btn--blue">
+                                    <i class="zmdi zmdi-plus"></i>add item
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-t-25">
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="overview-item overview-item--c1">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-dns"></i>
+                                        </div>
+                                        <div class="text">
+                                            <h2>{{$category}}</h2>
+                                            <span>Category</span>
+                                        </div>
+                                    </div>
+                                    <div class="overview-chart">
+                                        <canvas id="widgetChart1"></canvas>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <div class="login-form">
-
-                                        <form action="{{route('store-product')}}" method="post"
-                                              enctype="multipart/form-data">
-                                            @csrf
-                                            <div class="row">
-                                                <div class="form-group col-lg-6">
-                                                    <label>Title</label>
-                                                    <input class="au-input au-input--full" type="text" name="title"
-                                                           placeholder="Short sleeve t-shirt"><br>
-                                                    <span style="color: red">@error('title'){{$message}}@enderror</span>
-                                                </div>
-                                                <div class="form-group col-lg-6">
-                                                    <label>Price</label>
-                                                    <input class="au-input au-input--full" type="text" name="price"
-                                                           placeholder="₹ 0.00"><br>
-                                                    <span style="color: red">@error('price'){{$message}}@enderror</span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Descritpion</label>
-                                                <textarea class="form-control" rows="3"
-                                                          placeholder="Product Details" name="description"></textarea>
-                                                <span
-                                                    style="color: red">@error('description'){{$message}}@enderror</span>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-lg-4">
-                                                    <label>Quantity</label>
-                                                    <input class="au-input au-input--full" type="number" name="quantity"
-                                                           value="0"><br>
-                                                    <span
-                                                        style="color: red">@error('quantity'){{$message}}@enderror</span>
-                                                </div>
-                                                <div class="form-group col-lg-4">
-                                                    <label for="sel1">Status</label>
-                                                    <select class="form-control" id="sel1" name="status">
-                                                        <option value="1">Active</option>
-                                                        <option value="0">Draft</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-lg-4">
-                                                    <label for="sel1">Type</label>
-                                                    <select class="form-control" id="sel1" name="category">
-                                                        @foreach($categories as $category)
-                                                            <option
-                                                                value="{{$category->id}}">{{$category->name}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="form-group col-lg-8">
-                                                    <label>Media</label>
-                                                    <input type="file" name="images[]" class="form-control"
-                                                           multiple><br>
-                                                    <span style="color: red">@error('images'){{$message}}@enderror</span>
-                                                </div>
-                                                <div class="form-group col-lg-4">
-                                                    <label for="sel1">Discount</label>
-                                                    <select class="form-control" name="discount">
-                                                        @foreach($discounts as $discount)
-                                                            <option
-                                                                value="{{$discount->id}}">{{$discount->name}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">
-                                                SAVE
-                                            </button>
-                                        </form>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="overview-item overview-item--c2">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-shopping-cart"></i>
+                                        </div>
+                                        <div class="text">
+                                            <h2>{{$products}}</h2>
+                                            <span>Products</span>
+                                        </div>
+                                    </div>
+                                    <div class="overview-chart">
+                                        <canvas id="widgetChart2"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="overview-item overview-item--c3">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-calendar-note"></i>
+                                        </div>
+                                        <div class="text">
+                                            <h2>{{$orders}}</h2>
+                                            <span>Orders</span>
+                                        </div>
+                                    </div>
+                                    <div class="overview-chart">
+                                        <canvas id="widgetChart3"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="overview-item overview-item--c4">
+                                <div class="overview__inner">
+                                    <div class="overview-box clearfix">
+                                        <div class="icon">
+                                            <i class="zmdi zmdi-account-o"></i>
+                                        </div>
+                                        <div class="text">
+                                            <h2>{{$users}}</h2>
+                                            <span>Users</span>
+                                        </div>
+                                    </div>
+                                    <div class="overview-chart">
+                                        <canvas id="widgetChart4"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -296,66 +294,64 @@
         </div>
 
     </div>
+    <!-- Jquery JS-->
+    <script src="{{asset('vendor/jquery-3.2.1.min.js')}}"></script>
+    <!-- Bootstrap JS-->
+    <script src="{{asset('vendor/bootstrap-4.1/popper.min.js')}}"></script>
+    <script src="{{asset('vendor/bootstrap-4.1/bootstrap.min.js')}}"></script>
+    <!-- Vendor JS       -->
+    <script src="{{asset('vendor/slick/slick.min.js')}}">
+    </script>
+    <script src="{{asset('vendor/wow/wow.min.js')}}"></script>
+    <script src="{{asset('vendor/animsition/animsition.min.js')}}"></script>
+    <script src="{{asset('vendor/bootstrap-progressbar/bootstrap-progressbar.min.js')}}">
+    </script>
+    <script src="{{asset('vendor/counter-up/jquery.waypoints.min.js')}}"></script>
+    <script src="{{asset('vendor/counter-up/jquery.counterup.min.js')}}">
+    </script>
+    <script src="{{asset('vendor/circle-progress/circle-progress.min.js')}}"></script>
+    <script src="{{asset('vendor/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
+    <script src="{{asset('vendor/chartjs/Chart.bundle.min.js')}}"></script>
+    <script src="{{asset('vendor/select2/select2.min.js')}}">
+    </script>
 
-</div>
-<!-- Jquery JS-->
-<script src="{{asset('vendor/jquery-3.2.1.min.js')}}"></script>
-<!-- Bootstrap JS-->
-<script src="{{asset('vendor/bootstrap-4.1/popper.min.js')}}"></script>
-<script src="{{asset('vendor/bootstrap-4.1/bootstrap.min.js')}}"></script>
-<!-- Vendor JS       -->
-<script src="{{asset('vendor/slick/slick.min.js')}}">
-</script>
-<script src="{{asset('vendor/wow/wow.min.js')}}"></script>
-<script src="{{asset('vendor/animsition/animsition.min.js')}}"></script>
-<script src="{{asset('vendor/bootstrap-progressbar/bootstrap-progressbar.min.js')}}">
-</script>
-<script src="{{asset('vendor/counter-up/jquery.waypoints.min.js')}}"></script>
-<script src="{{asset('vendor/counter-up/jquery.counterup.min.js')}}">
-</script>
-<script src="{{asset('vendor/circle-progress/circle-progress.min.js')}}"></script>
-<script src="{{asset('vendor/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
-<script src="{{asset('vendor/chartjs/Chart.bundle.min.js')}}"></script>
-<script src="{{asset('vendor/select2/select2.min.js')}}">
-</script>
+    <!-- Main JS-->
+    <script src="{{asset('js/main.js')}}"></script>
+    {{-- Toaster --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.0/js/toastr.js"></script>
 
-<!-- Main JS-->
-<script src="{{asset('js/main.js')}}"></script>
-{{-- Toaster --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.0/js/toastr.js"></script>
-
-<script>
-    $(document).ready(function () {
-        toastr.options.timeOut = 2500;
-        @if (Session::has('error'))
-        toastr.error('{{ Session::get('error') }}');
-        @elseif(Session::has('success'))
-        toastr.success('{{ Session::get('success') }}');
-        @endif
-    });
-</script>
-<script type="text/javascript">
-    function deleteUser(id) {
-        var url = "{{ route('delete-user', ":id") }}";
-        url = url.replace(':id', id);
-        // if(confirm('Do you really want to delete this record?')){
-        $.ajax({
-            url: url,
-            type: 'post',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                '_method': 'DELETE'
-            },
-            success: function (response) {
-                toastr.success(response.success)
-                $('#sid' + id).remove();
-            }
-        })
-        // }
-    }
-</script>
+    <script>
+        $(document).ready(function () {
+            toastr.options.timeOut = 2500;
+            @if (Session::has('error'))
+            toastr.error('{{ Session::get('error') }}');
+            @elseif(Session::has('success'))
+            toastr.success('{{ Session::get('success') }}');
+            @endif
+        });
+    </script>
+    <script type="text/javascript">
+        function deleteUser(id) {
+            var url = "{{ route('delete-user', ":id") }}";
+            url = url.replace(':id', id);
+            // if(confirm('Do you really want to delete this record?')){
+            $.ajax({
+                url: url,
+                type: 'post',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    '_method': 'DELETE'
+                },
+                success: function (response) {
+                    toastr.success(response.success)
+                    $('#sid' + id).remove();
+                }
+            })
+            // }
+        }
+    </script>
 </body>
 
 </html>

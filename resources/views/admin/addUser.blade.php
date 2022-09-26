@@ -65,13 +65,21 @@
         <nav class="navbar-mobile">
             <div class="container-fluid">
                 <ul class="navbar-mobile__list list-unstyled">
+                    <li class="has-sub">
+                        <a class="js-arrow" href="{{'dashboard'}}">
+                            <i class="fas fa-home"></i>Home</a>
+                    </li>
+                    <li class="{{ isset($orders) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('orders-list')}}">
+                            <i class="fas fa-cart-plus"></i>Orders</a>
+                    </li>
                     <li class="{{ isset($users) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('users-list')}}">
                             <i class="fas fa-user"></i>Users</a>
                     </li>
                     <li class="{{ isset($products) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('products-list')}}">
-                            <i class="fas fa-user"></i>Products</a>
+                            <i class="fas fa-shopping-bag"></i>Products</a>
                     </li>
                 </ul>
             </div>
@@ -89,13 +97,21 @@
         <div class="menu-sidebar__content js-scrollbar1">
             <nav class="navbar-sidebar">
                 <ul class="list-unstyled navbar__list">
+                    <li class="has-sub">
+                        <a class="js-arrow" href="{{'dashboard'}}">
+                            <i class="fas fa-home"></i>Home</a>
+                    </li>
+                    <li class="{{ isset($orders) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('orders-list')}}">
+                            <i class="fas fa-cart-plus"></i>Orders</a>
+                    </li>
                     <li class="{{ isset($users) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('users-list')}}">
                             <i class="fas fa-user"></i>Users</a>
                     </li>
                     <li class="{{ isset($products) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('products-list')}}">
-                            <i class="fas fa-user"></i>Products</a>
+                            <i class="fas fa-shopping-bag"></i>Products</a>
                     </li>
                 </ul>
             </nav>
@@ -225,33 +241,55 @@
                                                     <span style="color: red">@error('email'){{$message}}@enderror</span>
                                                 </div>
                                             </div>
-
-                                            <div class="form-group">
-                                                <label>Mobile Number</label>
-                                                <input class="au-input au-input--full" type="number" name="mobile"
-                                                       placeholder="Mobile Number"><br>
-                                                <span style="color: red">@error('email'){{$message}}@enderror</span>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Address Line 1</label>
-                                                <input class="au-input au-input--full" type="text" name="address1"
-                                                       placeholder="Address Line 1"><br>
-                                                <span style="color: red">@error('address1'){{$message}}@enderror</span>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Address Line 2</label>
-                                                <input class="au-input au-input--full" type="text" name="address2"
-                                                       placeholder="Address Line 2"><br>
-                                                <span style="color: red">@error('address2'){{$message}}@enderror</span>
+                                            <div class="row">
+                                                <div class="form-group col-lg-6">
+                                                    <label>Mobile Number</label>
+                                                    <input class="au-input au-input--full" type="number" name="mobile"
+                                                           placeholder="Mobile Number"><br>
+                                                    <span style="color: red">@error('email'){{$message}}@enderror</span>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label for="sel1">Status</label>
+                                                    <select class="form-control" id="sel1" name="status">
+                                                        <option value="1" selected>Active
+                                                        </option>
+                                                        <option value="0">Draft
+                                                        </option>
+                                                    </select>
+                                                </div>
                                             </div>
                                             <div class="row">
-                                                <div class="form-group col-md-6">
+                                                <div class="form-group col-lg-6">
+                                                    <label>Address Line 1</label>
+                                                    <input class="au-input au-input--full" type="text" name="address1"
+                                                           placeholder="Address Line 1"><br>
+                                                    <span
+                                                        style="color: red">@error('address1'){{$message}}@enderror</span>
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label>Address Line 2</label>
+                                                    <input class="au-input au-input--full" type="text" name="address2"
+                                                           placeholder="Address Line 2"><br>
+                                                    <span
+                                                        style="color: red">@error('address2'){{$message}}@enderror</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-4">
                                                     <label>City</label>
                                                     <input class="au-input au-input--full" type="text" name="city"
                                                            placeholder="City"><br>
                                                     <span style="color: red">@error('city'){{$message}}@enderror</span>
                                                 </div>
-                                                <div class="form-group col-md-6">
+                                                <div class="form-group col-md-4">
+                                                    <label>Country</label>
+                                                    <input class="au-input au-input--full" type="text"
+                                                           name="country"
+                                                           placeholder="Country "><br>
+                                                    <span
+                                                        style="color: red">@error('postal_code'){{$message}}@enderror</span>
+                                                </div>
+                                                <div class="form-group col-md-4">
                                                     <label>Postal Code</label>
                                                     <input class="au-input au-input--full" type="number"
                                                            name="postal_code"
@@ -259,11 +297,6 @@
                                                     <span
                                                         style="color: red">@error('postal_code'){{$message}}@enderror</span>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Profile Image</label>
-                                                <input type="file" name="image"><br>
-                                                <span style="color: red">@error('image'){{$message}}@enderror</span>
                                             </div>
                                             <input type="hidden" name="id">
                                             <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit"

@@ -20,7 +20,7 @@ class CreateProductsTable extends Migration
             $table->text('images')->nullable();
             $table->integer('inventory')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
-            $table->decimal('price',9,3);
+            $table->decimal('price',9,2);
             $table->boolean('is_active')->default(false);
             $table->unsignedBigInteger('discount_id')->nullable();
             $table->timestamps();
