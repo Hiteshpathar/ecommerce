@@ -2,62 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserFormRequest;
 use App\Jobs\SendEmailJob;
 use App\Models\User;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
-    public function test($is_approved)
-    {
-        return $is_approved==1?'approved':'not_approved';
-    }
-
     public function index(Request $request)
     {
         $sort = $request->sort ?? 'created_at';
-        $order = 'desc';
-        $query = User::Sortable()->filter($request->only('search', 'status'));
+        $order = $request->order && in_array($request->order, ['ascending', 'descending']) ? str_replace('ending', '', $request->order) : 'desc';
+
+        $query = User::with('orders', 'address')->filter($request->only('search', 'status'));
         $query = $query->orderBy($sort, $order);
         $users = $query->paginate(25);
-        return view('admin/usersList', ['users' => $users]);
+        foreach ($users as $user) {
+            foreach ($user->orders as $order) {
+                $user->total_spent += $order->total_amount;
+            }
+        }
+        return $users;
+
+//        return view('admin/usersList', ['users' => $users]);
     }
 
     public function show($id)
     {
-        return User::where('id', $id)->first();
+        return User::with('address')->find($id);
     }
 
-    public function store(Request $request)
+    public function store(UserFormRequest $request)
     {
-        $request->validate([
-            'first_name' => 'required',
-            'email' => 'required||regex:/(.+)@(.+)\.(.+)/i',
-            'address1' => 'required',
-            'postal_code' => 'required',
-        ]);
-
-        $user = User::where('email', $request->input('email'))->count();
-        if ($user > 0) {
-            echo "email already exists";
-        } else {
-            $user = new User();
-            $user->first_name = $request->input('first_name');
-            $user->last_name = $request->input('last_name') ?? '';
-            $user->email = $request->input('email');
-            $user->password = Str::random(10);
-            $user->mobile = $request->input('mobile') ?? '';
-            $user->is_active = $request->input('status') ?? '';
-            $user->address1 = $request->input('address1')??'';
-            $user->address2 = $request->input('address2')??'';
-            $user->city = $request->input('city')??'';
-            $user->country = $request->input('country')??'';
-            $user->postal_code = $request->input('postal_code')??'';
-            $user->save();
-            return redirect()->route('users-list')->with('success', 'User added');
-        }
+//        try {
+        $data = $request->only(['first_name', 'last_name', 'mobile', 'email']);
+        $data['password'] = Str::random(20);
+        $user = User::create($data);
+        $user->address()->create($request->address);
+        return response(['message' => "User has been created successfully!"]);
+//        } catch (\Exception $e) {
+//            return response(['error' => 'Something went wrong, Try again later!'], 500);
+//        }
     }
 
     public function edit($id)
@@ -66,26 +53,18 @@ class UserController extends Controller
         return view('admin/showUser', ['user' => $user]);
     }
 
-    public function update(Request $request)
+    public function update(UserFormRequest $request, $id)
     {
-        $user = User::find($request->id);
-        $user->first_name = $request->input('first_name');
-        $user->last_name = $request->input('last_name') ?? '';
-        $user->email = $request->input('email');
-        $user->password = Str::random(10);
-        $user->mobile = $request->input('mobile') ?? '';
-        $user->is_active = $request->input('status') ?? '';
-        $user->address1 = $request->input('address1')??'';
-        $user->address2 = $request->input('address2')??'';
-        $user->city = $request->input('city')??'';
-        $user->country = $request->input('country')??'';
-        $user->postal_code = $request->input('postal_code')??'';
-        $user->save();
-        return redirect()->route('users-list')->with('success', 'User updates successfully');
-
+        $data = $request->only('first_name', 'last_name', 'email', 'mobile');
+        try {
+            User::where('id', $id)->update($data);
+            return response(['message' => "User has been updated successfully!"]);
+        } catch (\Exception $e) {
+            return response(['error' => 'Something went wrong, Try again later!'], 500);
+        }
     }
 
-    function sendMail($id)
+    public function sendMail($id)
     {
         $user = User::find($id);
 
@@ -99,12 +78,22 @@ class UserController extends Controller
         $user->is_email_sent = true;
         $user->save();
         SendEmailJob::dispatch($data);
-        return redirect()->back()->with('success', 'Mail Sent Successfully');
+        return response(['message' => "Mail been Sent successfully!"]);
     }
 
-    function destroy($id)
+    public function destroy($id)
     {
-        User::find($id)->delete();
-        return response()->json(['success' => 'deleted successfully']);
+        try {
+            User::destroy($id);
+            return response(['message' => "User has been deleted successfully!"]);
+        } catch (\Exception $e) {
+            return response(['error' => 'Something went wrong, Try again later!'], 500);
+        }
+    }
+
+    public function address($id)
+    {
+        $address = User::find($id)->address;
+        return view('admin/userAddress', ['address' => $address]);
     }
 }

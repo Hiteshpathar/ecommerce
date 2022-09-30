@@ -81,6 +81,10 @@
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-shopping-bag"></i>Products</a>
                     </li>
+                    <li class="{{ isset($collections) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('collections-list')}}">
+                            <i class="fas fa-shopping-bag"></i>Collections</a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -113,11 +117,14 @@
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-shopping-bag"></i>Products</a>
                     </li>
+                    <li class="{{ isset($collections) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('collections-list')}}">
+                            <i class="fas fa-shopping-bag"></i>Collections</a>
+                    </li>
                 </ul>
             </nav>
         </div>
-    </aside>
-    <!-- END MENU SIDEBAR-->
+    </aside>    <!-- END MENU SIDEBAR-->
 
     <!-- PAGE CONTAINER-->
     <div class="page-container">
@@ -134,32 +141,6 @@
                             </button>
                         </form>
                         <div class="header-button">
-                            {{--                                <div class="noti-wrap">--}}
-                            {{--                                    <div class="noti__item js-item-menu">--}}
-                            {{--                                        <i class="zmdi zmdi-notifications"></i>--}}
-                            {{--                                        <span class="quantity">{{$totalPendingRequests}}</span>--}}
-                            {{--                                        <div class="notifi-dropdown js-dropdown">--}}
-                            {{--                                            <div class="notifi__title">--}}
-
-                            {{--                                                <p>You have {{$totalPendingRequests}} pending requests</p>--}}
-                            {{--                                            </div>--}}
-                            {{--                                            @foreach($students as $student)--}}
-                            {{--                                                @if($student->is_approved == 0)--}}
-                            {{--                                                    <div class="notifi__item">--}}
-                            {{--                                                        <div class="bg-c1 img-cir img-40">--}}
-                            {{--                                                            <a href="{{route('approve-student',[$student->id,$student->is_approved])}}"><i--}}
-                            {{--                                                                    class="fa fa-check" aria-hidden="true"></i></a>--}}
-                            {{--                                                        </div>--}}
-                            {{--                                                        <div class="content">--}}
-                            {{--                                                            {{$student->first_name.' '.$student->last_name}} wants to--}}
-                            {{--                                                            login--}}
-                            {{--                                                        </div>--}}
-                            {{--                                                    </div>--}}
-                            {{--                                                @endif--}}
-                            {{--                                            @endforeach--}}
-                            {{--                                        </div>--}}
-                            {{--                                    </div>--}}
-                            {{--                                </div>--}}
                             <div class="account-wrap">
                                 <div class="account-item clearfix js-item-menu">
                                     <div class="content">
@@ -205,31 +186,35 @@
         <div class="main-content">
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-lg-12">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
                             <div class="card">
                                 <div class=" card-header login-logo">
                                     <a href="#">
                                         <img src="{{asset('images/icon/logo.png')}}" alt="CoolAdmin">
                                     </a>
+                                    <a href="{{route('address-list',$user->id)}}"
+                                       class="btn btn-secondary text-light float-right">Address</a>
                                 </div>
                                 <div class="card-body">
                                     <div class="login-form">
-
                                         <form action="{{route('update-user')}}" method="post"
                                               enctype="multipart/form-data">
                                             @csrf
                                             <div class="row">
                                                 <div class="form-group col-md-4">
                                                     <label>First Name</label>
-                                                    <input class="au-input au-input--full" type="text" name="first_name"
-                                                           placeholder="First Name" value="{{$user->first_name}}"><br>
+                                                    <input class="au-input au-input--full" type="text"
+                                                           name="first_name"
+                                                           placeholder="First Name"
+                                                           value="{{$user->first_name}}"><br>
                                                     <span
                                                         style="color: red">@error('first_name'){{$message}}@enderror</span>
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label>Last Name</label>
-                                                    <input class="au-input au-input--full" type="text" name="last_name"
+                                                    <input class="au-input au-input--full" type="text"
+                                                           name="last_name"
                                                            placeholder="Last Name" value="{{$user->last_name}}"><br>
                                                     <span
                                                         style="color: red">@error('last_name'){{$message}}@enderror</span>
@@ -238,36 +223,48 @@
                                                     <label>Email Address</label>
                                                     <input class="au-input au-input--full" type="email" name="email"
                                                            placeholder="Email" value="{{$user->email}}"><br>
-                                                    <span style="color: red">@error('email'){{$message}}@enderror</span>
+                                                    <span
+                                                        style="color: red">@error('email'){{$message}}@enderror</span>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-lg-6">
                                                     <label>Mobile Number</label>
-                                                    <input class="au-input au-input--full" type="number" name="mobile"
-                                                           placeholder="Mobile Number" value="{{$user->mobile}}"><br>
-                                                    <span style="color: red">@error('email'){{$message}}@enderror</span>
+                                                    <input class="au-input au-input--full" type="number"
+                                                           name="mobile"
+                                                           placeholder="Mobile Number"
+                                                           value="{{$user->mobile}}"><br>
+                                                    <span
+                                                        style="color: red">@error('email'){{$message}}@enderror</span>
                                                 </div>
                                                 <div class="form-group col-lg-6">
                                                     <label for="sel1">Status</label>
                                                     <select class="form-control" id="sel1" name="status">
-                                                        <option value="1" {{$user->is_active==1?'selected':''}}>Active</option>
-                                                        <option value="0" {{$user->is_active==0?'selected':''}}>Draft</option>
+                                                        <option value="1" {{$user->is_active==1?'selected':''}}>
+                                                            Active
+                                                        </option>
+                                                        <option value="0" {{$user->is_active==0?'selected':''}}>
+                                                            InActive
+                                                        </option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="form-group col-lg-6">
                                                     <label>Address Line 1</label>
-                                                    <input class="au-input au-input--full" type="text" name="address1"
-                                                           placeholder="Address Line 1" value="{{$user->address1??''}}"><br>
+                                                    <input class="au-input au-input--full" type="text"
+                                                           name="address1"
+                                                           placeholder="Address Line 1"
+                                                           value="{{$user->address1??''}}"><br>
                                                     <span
                                                         style="color: red">@error('address1'){{$message}}@enderror</span>
                                                 </div>
                                                 <div class="form-group col-lg-6">
                                                     <label>Address Line 2</label>
-                                                    <input class="au-input au-input--full" type="text" name="address2"
-                                                           placeholder="Address Line 2" value="{{$user->address2??''}}"><br>
+                                                    <input class="au-input au-input--full" type="text"
+                                                           name="address2"
+                                                           placeholder="Address Line 2"
+                                                           value="{{$user->address2??''}}"><br>
                                                     <span
                                                         style="color: red">@error('address2'){{$message}}@enderror</span>
                                                 </div>
@@ -277,13 +274,16 @@
                                                     <label>City</label>
                                                     <input class="au-input au-input--full" type="text" name="city"
                                                            placeholder="City" value="{{$user->city??''}}"><br>
-                                                    <span style="color: red">@error('city'){{$message}}@enderror</span>
+                                                    <span
+                                                        style="color: red">@error('city'){{$message}}@enderror</span>
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label>Country</label>
-                                                    <input class="au-input au-input--full" type="text" name="country"
+                                                    <input class="au-input au-input--full" type="text"
+                                                           name="country"
                                                            placeholder="City" value="{{$user->country??''}}"><br>
-                                                    <span style="color: red">@error('city'){{$message}}@enderror</span>
+                                                    <span
+                                                        style="color: red">@error('city'){{$message}}@enderror</span>
                                                 </div>
                                                 <div class="form-group col-md-4">
                                                     <label>Postal Code</label>

@@ -20,11 +20,6 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('mobile')->nullable();
-            $table->string('address1')->nullable();
-            $table->string('address2')->nullable();
-            $table->string('city')->nullable();
-            $table->string('country')->default('India');
-            $table->string('postal_code')->nullable();
             $table->boolean('is_active')->default(false);
             $table->boolean('is_email_sent')->default(false);
             $table->rememberToken();

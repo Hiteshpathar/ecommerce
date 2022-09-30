@@ -254,9 +254,8 @@
                                             isset($_GET['status'])?$status=$_GET['status']:$status='all'
                                         @endphp
                                         <form method="get">
-                                            <div class="table-data__tool-left">
+                                            <div class="table-data__tool-left d-inline-flex">
                                                 <div class="rs-select2--light rs-select2--md">
-
                                                     <select class="js-select2" name="status"
                                                             onchange="this.form.submit()">
                                                         <option value="" {{ $status =='all' ? 'selected' : ''  }}>
@@ -284,13 +283,13 @@
                                 <h2>No data found</h2>
                             @else
                                 <div class="table-responsive table-responsive-data2">
-                                    <table class="table table-data2">
+                                    <table class="table table-data2" id="users-data">
                                         <thead>
                                         <tr>
                                             <th>@sortablelink('first_name', 'First Name')</th>
                                             <th>@sortablelink('last_name','Last Name')</th>
                                             <th>@sortablelink('email','Email')</th>
-                                            <td>Location</td>
+                                            <th>Location</th>
                                             <th>Status</th>
                                             <th>Orders</th>
                                             <th>Spent</th>

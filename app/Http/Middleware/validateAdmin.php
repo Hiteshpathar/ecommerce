@@ -17,9 +17,7 @@ class validateAdmin
     public function handle(Request $request, Closure $next)
     {
         $path = $request->path();
-//        if (($path == "admin/login" || $path == "admin/verify" ) && session('email')){
-//            return redirect()->route('users-list');
-//        }
+
         if($path!= "login" && !session('admin')){
             return redirect()->route('admin-login')->with('error','Please Login');
         }

@@ -48,24 +48,23 @@
                 <div class="login-content">
                     <div class="login-logo">
                         <a href="#">
-                            <img src="../../../public/images/icon/logo.png" alt="CoolAdmin">
+                            <img src="{{asset('images/icon/logo.png')}}" alt="CoolAdmin">
                         </a>
                     </div>
                     <div class="login-form">
                         <form action="{{route('verify-admin')}}" method="post">
                             @csrf
                             <div class="form-group">
-                                <label>Email Address</label>
-                                <input class="au-input au-input--full" name="email" placeholder="Email"><br>
+                                <label>Email Address
+                                    <input class="au-input au-input--full" name="email" placeholder="Email">
+                                </label>
                                 <span style="color: red">@error('email'){{$message}}@enderror</span>
                             </div>
                             <div class="form-group">
-                                <label>Password</label>
-                                <input class="au-input au-input--full" type="password" name="password" placeholder="Password"><br>
+                                <label>Password
+                                    <input class="au-input au-input--full" type="password" name="password" placeholder="Password">
+                                </label>
                                 <span style="color: red">@error('password'){{$message}}@enderror</span>
-                            </div>
-                            <div class="form-group">
-                                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
                             </div>
                             <div class="login-checkbox">
                                 <label>
@@ -73,19 +72,12 @@
                                 </label>
                             </div>
                             <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">sign in</button>
-                            <div class="social-login-content">
-                                <div class="social-button">
-                                    <button class="au-btn au-btn--block au-btn--blue m-b-20">sign in with facebook</button>
-                                    <button class="au-btn au-btn--block au-btn--blue2">sign in with twitter</button>
-                                </div>
-                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 <!-- Jquery JS-->

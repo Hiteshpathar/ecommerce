@@ -81,6 +81,10 @@
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-shopping-bag"></i>Products</a>
                     </li>
+                    <li class="{{ isset($collections) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('collections-list')}}">
+                            <i class="fas fa-shopping-bag"></i>Collections</a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -112,6 +116,10 @@
                     <li class="has-sub">
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-shopping-bag"></i>Products</a>
+                    </li>
+                    <li class="{{ isset($collections) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('collections-list')}}">
+                            <i class="fas fa-shopping-bag"></i>Collections</a>
                     </li>
                 </ul>
             </nav>
@@ -209,9 +217,6 @@
                         <div class="col-md-12">
                             <div class="overview-wrap">
                                 <h2 class="title-1">overview</h2>
-                                <button class="au-btn au-btn-icon au-btn--blue">
-                                    <i class="zmdi zmdi-plus"></i>add item
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -289,69 +294,136 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="au-card m-b-30">
+                                <div class="au-card-inner">
+                                    <h3 class="title-2 m-b-40">Monthly Orders</h3>
+                                    <canvas id="lineChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="au-card m-b-30">
+                                <div class="au-card-inner">
+                                    <h3 class="title-2 m-b-40">Monthly Sales</h3>
+                                    <canvas id="lineChart2"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
     </div>
-    <!-- Jquery JS-->
-    <script src="{{asset('vendor/jquery-3.2.1.min.js')}}"></script>
-    <!-- Bootstrap JS-->
-    <script src="{{asset('vendor/bootstrap-4.1/popper.min.js')}}"></script>
-    <script src="{{asset('vendor/bootstrap-4.1/bootstrap.min.js')}}"></script>
-    <!-- Vendor JS       -->
-    <script src="{{asset('vendor/slick/slick.min.js')}}">
-    </script>
-    <script src="{{asset('vendor/wow/wow.min.js')}}"></script>
-    <script src="{{asset('vendor/animsition/animsition.min.js')}}"></script>
-    <script src="{{asset('vendor/bootstrap-progressbar/bootstrap-progressbar.min.js')}}">
-    </script>
-    <script src="{{asset('vendor/counter-up/jquery.waypoints.min.js')}}"></script>
-    <script src="{{asset('vendor/counter-up/jquery.counterup.min.js')}}">
-    </script>
-    <script src="{{asset('vendor/circle-progress/circle-progress.min.js')}}"></script>
-    <script src="{{asset('vendor/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
-    <script src="{{asset('vendor/chartjs/Chart.bundle.min.js')}}"></script>
-    <script src="{{asset('vendor/select2/select2.min.js')}}">
-    </script>
+</div>
+</div>
+<!-- Jquery JS-->
+<script src="{{asset('vendor/jquery-3.2.1.min.js')}}"></script>
+<!-- Bootstrap JS-->
+<script src="{{asset('vendor/bootstrap-4.1/popper.min.js')}}"></script>
+<script src="{{asset('vendor/bootstrap-4.1/bootstrap.min.js')}}"></script>
+<!-- Vendor JS       -->
+<script src="{{asset('vendor/slick/slick.min.js')}}">
+</script>
+<script src="{{asset('vendor/wow/wow.min.js')}}"></script>
+<script src="{{asset('vendor/animsition/animsition.min.js')}}"></script>
+<script src="{{asset('vendor/bootstrap-progressbar/bootstrap-progressbar.min.js')}}">
+</script>
+<script src="{{asset('vendor/counter-up/jquery.waypoints.min.js')}}"></script>
+<script src="{{asset('vendor/counter-up/jquery.counterup.min.js')}}">
+</script>
+<script src="{{asset('vendor/circle-progress/circle-progress.min.js')}}"></script>
+<script src="{{asset('vendor/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
+<script src="{{asset('vendor/chartjs/Chart.bundle.min.js')}}"></script>
+<script src="{{asset('vendor/select2/select2.min.js')}}">
+</script>
 
-    <!-- Main JS-->
-    <script src="{{asset('js/main.js')}}"></script>
-    {{-- Toaster --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.0/js/toastr.js"></script>
+<!-- Main JS-->
+<script src="{{asset('js/main.js')}}"></script>
+{{-- Toaster --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.0/js/toastr.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            toastr.options.timeOut = 2500;
-            @if (Session::has('error'))
-            toastr.error('{{ Session::get('error') }}');
-            @elseif(Session::has('success'))
-            toastr.success('{{ Session::get('success') }}');
-            @endif
-        });
-    </script>
-    <script type="text/javascript">
-        function deleteUser(id) {
-            var url = "{{ route('delete-user', ":id") }}";
-            url = url.replace(':id', id);
-            // if(confirm('Do you really want to delete this record?')){
-            $.ajax({
-                url: url,
-                type: 'post',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    '_method': 'DELETE'
-                },
-                success: function (response) {
-                    toastr.success(response.success)
-                    $('#sid' + id).remove();
-                }
-            })
-            // }
+<script>
+    $(document).ready(function () {
+        toastr.options.timeOut = 2500;
+        @if (Session::has('error'))
+        toastr.error('{{ Session::get('error') }}');
+        @elseif(Session::has('success'))
+        toastr.success('{{ Session::get('success') }}');
+        @endif
+    });
+</script>
+<script type="text/javascript">
+    function deleteUser(id) {
+        var url = "{{ route('delete-user', ":id") }}";
+        url = url.replace(':id', id);
+        // if(confirm('Do you really want to delete this record?')){
+        $.ajax({
+            url: url,
+            type: 'post',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                '_method': 'DELETE'
+            },
+            success: function (response) {
+                toastr.success(response.success)
+                $('#sid' + id).remove();
+            }
+        })
+        // }
+    }
+</script>
+<script>
+    var month = <?php echo $month; ?>;
+    var graph_orders = <?php echo $graph_orders; ?>;
+    var orders = document.getElementById("lineChart").getContext('2d');
+    var sales = document.getElementById("lineChart2").getContext('2d');
+    var myMonthlyOrders = new Chart(orders, {
+        type: 'line',
+        data: {
+            labels: month,
+            datasets: [{
+                label: "Monthly Orders",
+                data: graph_orders,
+                backgroundColor: [
+                    'rgba(0, 137, 132, .2)',
+                ],
+                borderColor: [
+                    'rgba(0, 10, 130, .7)',
+                ],
+                borderWidth: 2
+            }
+            ]
+        },
+        options: {
+            responsive: true
         }
-    </script>
+    });
+    var myMonthlySales = new Chart(sales, {
+        type: 'line',
+        data: {
+            labels: month,
+            datasets: [{
+                label: "Monthly Sales",
+                data: sales,
+                backgroundColor: [
+                    'rgba(0, 137, 132, .2)',
+                ],
+                borderColor: [
+                    'rgba(0, 10, 130, .7)',
+                ],
+                borderWidth: 2
+            }
+            ]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
 </body>
 
 </html>

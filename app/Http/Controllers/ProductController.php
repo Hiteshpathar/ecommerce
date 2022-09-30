@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
-use App\Models\discount;
+use App\Models\Discount;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
@@ -36,7 +36,7 @@ class ProductController extends Controller
     public function create()
     {
         $categories = ProductCategory::all();
-        $discounts = discount::where('is_active', 1)->get();
+        $discounts = Discount::where('is_active', 1)->get();
         return view('admin/addProduct', ['categories' => $categories, 'discounts' => $discounts]);
     }
 
@@ -56,7 +56,7 @@ class ProductController extends Controller
         $product = new Product();
         $product->title = $request->input('title');
         $product->description = $request->input('description');
-        $product->inventory = $request->input('inventory');
+        $product->inventory = $request->input('quantity');
         $product->category_id = $request->input('category');
         $product->price = $request->input('price') ?? 0;
         $product->discount_id = $request->input('discount');
@@ -112,7 +112,7 @@ class ProductController extends Controller
         $product = Product::find($request->id);
         $product->title = $request->input('title');
         $product->description = $request->input('description');
-        $product->inventory = $request->input('inventory');
+        $product->inventory = $request->input('quantity');
         $product->is_active = $request->input('is_active');
         $product->category_id = $request->input('category');
         $product->price = $request->input('price') ?? 0;

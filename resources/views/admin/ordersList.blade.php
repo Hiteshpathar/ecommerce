@@ -81,6 +81,10 @@
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-shopping-bag"></i>Products</a>
                     </li>
+                    <li class="{{ isset($collections) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('collections-list')}}">
+                            <i class="fas fa-shopping-bag"></i>Collections</a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -112,6 +116,10 @@
                     <li class="{{ isset($products) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-shopping-bag"></i>Products</a>
+                    </li>
+                    <li class="{{ isset($collections) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('collections-list')}}">
+                            <i class="fas fa-shopping-bag"></i>Collections</a>
                     </li>
                 </ul>
             </nav>

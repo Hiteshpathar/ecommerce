@@ -81,6 +81,10 @@
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-shopping-bag"></i>Products</a>
                     </li>
+                    <li class="{{ isset($collections) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('collections-list')}}">
+                            <i class="fas fa-shopping-bag"></i>Collections</a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -113,11 +117,14 @@
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-shopping-bag"></i>Products</a>
                     </li>
+                    <li class="{{ isset($collections) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('collections-list')}}">
+                            <i class="fas fa-shopping-bag"></i>Collections</a>
+                    </li>
                 </ul>
             </nav>
         </div>
-    </aside>
-    <!-- END MENU SIDEBAR-->
+    </aside>    <!-- END MENU SIDEBAR-->
 
     <!-- PAGE CONTAINER-->
     <div class="page-container">
@@ -205,8 +212,8 @@
         <div class="main-content">
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-lg-12">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
                             <div class="card">
                                 <div class=" card-header login-logo">
                                     <a href="#">
@@ -246,14 +253,14 @@
                                                     <label>Mobile Number</label>
                                                     <input class="au-input au-input--full" type="number" name="mobile"
                                                            placeholder="Mobile Number"><br>
-                                                    <span style="color: red">@error('email'){{$message}}@enderror</span>
+                                                    <span style="color: red">@error('mobile_number'){{$message}}@enderror</span>
                                                 </div>
                                                 <div class="form-group col-lg-6">
                                                     <label for="sel1">Status</label>
                                                     <select class="form-control" id="sel1" name="status">
                                                         <option value="1" selected>Active
                                                         </option>
-                                                        <option value="0">Draft
+                                                        <option value="0">InActive
                                                         </option>
                                                     </select>
                                                 </div>

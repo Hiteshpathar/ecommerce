@@ -82,6 +82,10 @@
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-shopping-bag"></i>Products</a>
                     </li>
+                    <li class="{{ isset($collections) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('collections-list')}}">
+                            <i class="fas fa-shopping-bag"></i>Collections</a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -99,7 +103,7 @@
             <nav class="navbar-sidebar">
                 <ul class="list-unstyled navbar__list">
                     <li class="has-sub">
-                        <a class="js-arrow" href="">
+                        <a class="js-arrow" href="{{'dashboard'}}">
                             <i class="fas fa-home"></i>Home</a>
                     </li>
                     <li class="{{ isset($orders) ? 'active' : ''  }} has-sub">
@@ -113,6 +117,10 @@
                     <li class="{{ isset($products) ? 'active' : ''  }} has-sub">
                         <a class="js-arrow" href="{{route('products-list')}}">
                             <i class="fas fa-shopping-bag"></i>Products</a>
+                    </li>
+                    <li class="{{ isset($collections) ? 'active' : ''  }} has-sub">
+                        <a class="js-arrow" href="{{route('collections-list')}}">
+                            <i class="fas fa-shopping-bag"></i>Collections</a>
                     </li>
                 </ul>
             </nav>
