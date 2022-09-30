@@ -93,6 +93,68 @@
                 <br>
             </PStack>
         </PCard>
+        <PModal
+            sectioned
+            :title="modelTitle"
+            :primaryAction="{content: 'Save', onAction: createAddress}"
+            :secondaryActions="[{content:'Close', onAction: () => {openAddressModel = false}}]"
+            :open="openAddressModel" @close="openAddressModel = !openAddressModel"
+            large
+        >
+            <PLayout sectioned>
+                <PLayoutAnnotatedSection
+                    title="User OverView"
+                >
+                    <PFormLayout>
+                        <PFormLayoutGroup>
+                            <PTextField label="First Name *" placeholder="First Name" v-model="form.first_name"
+                                        :error="errors.first_name ? errors.first_name[0] : ''" id="first_name">
+                            </PTextField>
+                            <PTextField label="Last Name" placeholder="Last Name" v-model="form.last_name"
+                                        :error="errors.last_name ? errors.last_name[0] : ''" id="last_name"/>
+                        </PFormLayoutGroup>
+                        <PFormLayoutGroup>
+                            <PTextField label="Email *" placeholder="Email" v-model="form.email"
+                                        :error="errors.email ? errors.email[0] : ''" id="email"
+                                        :disabled="isDisableEmail"/>
+                            <PTextField label="Mobile Number*" placeholder="Mobile Number" v-model="form.mobile"
+                                        :error="errors.mobile ? errors.mobile[0] : ''" id="mobile"/>
+                        </PFormLayoutGroup>
+                    </PFormLayout>
+                </PLayoutAnnotatedSection>
+
+                <PLayoutAnnotatedSection
+                    title="Address"
+                    description="The primary address of this customer"
+                >
+                    <PFormLayout>
+                        <PFormLayoutGroup>
+                            <PTextField label="First Name *" placeholder="First Name" v-model="form.address.first_name"
+                                        id="first_name"/>
+                            <PTextField label="Last Name" placeholder="Last Name" v-model="form.address.last_name"
+                                        id="last_name"/>
+                            <PTextField label="Email *" placeholder="Email" v-model="form.address.email"
+                                        id="email"
+                                        :disabled="isDisableEmail"/>
+                            <PTextField label="Mobile Number*" placeholder="Mobile Number" v-model="form.address.mobile"
+                                        id="mobile"/>
+                            <PTextField label="Address *" placeholder="Address" v-model="form.address.address1"
+                                        id="address"/>
+                            <PTextField label="Apartment, Suite, etc.*" placeholder="Apartment, Suite, etc." v-model="form.address.address2"
+                                        id="address2"/>
+                            <PTextField label="City" placeholder="City" v-model="form.address.city"
+                                        id="city"/>
+                            <PTextField label="State" placeholder="State" v-model="form.address.state"
+                                        id="state"/>
+                            <PTextField label="Country" placeholder="Country" v-model="form.address.country"
+                                        id="country"/>
+                            <PTextField label="Pin Code" placeholder="Pin Code" v-model="form.address.postal_code"
+                                        id="postal_code"/>
+                        </PFormLayoutGroup>
+                    </PFormLayout>
+                </PLayoutAnnotatedSection>
+            </PLayout>
+        </PModal>
     </PPage>
 </template>
 
@@ -106,10 +168,14 @@
                 subTitle: "",
                 user: {},
                 to: {name: "users"},
-                primaryAction:{
+                primaryAction: {
                     content: 'Add New',
                     onAction: this.openCreateAddressModel,
-                }
+                },
+                openAddressModel: true,
+                modelTitle: "Add New Address",
+                isDisableEmail: false,
+                isEdit: false,
             }
         },
         async created() {
@@ -146,18 +212,57 @@
                 this.form.last_name = "";
                 this.form.email = "";
                 this.form.mobile = "";
-                this.form.address={
-                    first_name: '',
-                    last_name: '',
-                    email:'',
-                    mobile: '',
-                    address1:'',
-                    address2:'',
-                    city:'',
-                    country:'',
-                    postal_code:'',
-                    is_primary:1
+                this.form.address1= '';
+                this.form.address2='';
+                this.form.city= '';
+                this.form.country= '';
+                this.form.postal_code= '';
+                this.form.is_primary= 1
+
+            },
+            async createAddress() {
+                if (this.isEdit) {
+                    this.form._method = "PUT";
+                } else {
+                    this.form._method = "POST";
                 }
+                if (this.pending) {
+                    this.form.pending = this.pending;
+                }
+                await this.addressCreateUpdate(this.form);
+                if (this.errors.length === 0) {
+                    this.$pToast.open({
+                        message: this.message
+                    });
+                    this.isEdit = false;
+                    this.openUserModel = false;
+                    this.form.id = null;
+                    this.form.first_name = "";
+                    this.form.last_name = "";
+                    this.form.email = "";
+                    this.form.address={
+                        first_name: '',
+                        last_name: '',
+                        email:'',
+                        mobile: '',
+                        address1:'',
+                        address2:'',
+                        city:'',
+                        country:'',
+                        postal_code:'',
+                        is_primary:1
+                    }
+                    this.load(this.queryParams);
+                }
+            },
+            async editAddress(item) {
+                this.resetError();
+                const response = await this.loadUser(item.id);
+                this.openUserModel = true;
+                this.isEdit = true;
+                this.modelTitle = "Edit User";
+                this.isDisableEmail = true;
+                this.form = {...response.data};
             },
         }
     }
