@@ -15,16 +15,17 @@ class SendEmailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $details;
+    public $details, $user;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($details)
+    public function __construct($details, $user)
     {
         $this->details = $details;
+        $this->user = $user;
     }
 
     /**
@@ -41,5 +42,7 @@ class SendEmailJob implements ShouldQueue
                     ->from($this->details['from']);
             }
         );
+        $this->user->is_email_sent = true;
+        $this->user->save();
     }
 }

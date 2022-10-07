@@ -49,6 +49,7 @@ class User extends Authenticatable
     }
     public function scopeFilter($query, $filters)
     {
+
         if (isset($filters['search'])) {
             $query->where('first_name', 'LIKE', '%' . $filters['search'] . '%');
             $query->orWhere('last_name', 'LIKE', '%' . $filters['search'] . '%');

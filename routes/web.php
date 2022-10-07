@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
@@ -18,6 +19,14 @@ use App\Http\Controllers\DashboardController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/', function (){
+    return view('welcome');
+});
+Route::get('{url?}', function (Request $request) {
+    return view('welcome');
+})->where('url', '.*');
+
 
 //Route::get('/', function () {
 //    echo 'test';

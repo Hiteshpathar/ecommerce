@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Admin;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -19,15 +20,23 @@ class AdminController extends Controller
                 ['email', '=', $request->input('email')],
                 ['password', '=', $request->input('password')],
             ])->firstOrFail();
-            session(['admin' => $admin]);
-            return redirect()->route('users-list')->with('success', 'Welcome');
+            $admin->is_logged_in = 1;
+            $admin->save();
+            return response()->json($admin, 200);
+
         } catch (\Exception $exception) {
-            $request->session()->flash('error', 'User Not Found!');
-            return redirect()->route('admin-login');
+            return response()->json(['message' => 'User Not Found'], 422);
         }
     }
-    public function logout(){
-        session()->flush();
-        return redirect()->route('admin-login')->with('success', 'logged out successfully');
+
+    public function isLoggedIn(Request $request)
+    {
+        return Admin::where('is_logged_in',1)->count();
+    }
+
+    public function logout(Request $request)
+    {
+        return $request;
+        Admin::where('email','=',$request->email)->update(['is_logged_in'=>0]);
     }
 }

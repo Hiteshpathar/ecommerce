@@ -5,15 +5,16 @@
     >
         <PCard sectioned>
             <PDataTable
-                :resourceName="{singular: 'User', plural: 'Users'}"
                 :headings="headings"
+                :footerContent="users.data && users.data.length ? 'Showing '+ from + ' - '+ to +' of '+ users.total + ' results' : 'No data found'"
+                :resourceName="{'singular': 'User By Name, Email','plural': 'Users By Name, Email '}"
                 :rows="users.data"
                 :sort="{value: queryParams.sort,direction: queryParams.order}"
+                @sort-changed="handleSort"
                 :inputFilter="queryParams.search"
                 @input-filter-changed="handleSearch"
                 :columnContentTypes="[]"
                 hasFilter
-                @sort-changed="handleSort"
             >
                 <template v-slot:item="{item}">
                     <PDataTableRow>
@@ -26,10 +27,13 @@
                             {{item.email}}
                         </PDataTableCol>
                         <PDataTableCol>
-                            {{item.orders.length+' Orders'}}
+                            {{item.location}}
                         </PDataTableCol>
-                        <PDataTableCol>
-                            {{item.total_spent?'₹'+item.total_spent:'₹0.00'}}
+                        <PDataTableCol numeric>
+                            {{item.orders_count+' Orders'}}
+                        </PDataTableCol>
+                        <PDataTableCol numeric>
+                            ₹ {{item.total_spent?toInr(item.total_spent):'0.00'}}
                         </PDataTableCol>
                         <PDataTableCol>
                             <PButtonGroup segmented spacing="extraTight">
@@ -56,10 +60,10 @@
                               preferredAlignment="right">
                         <PButton slot="activator" @click="sortFilterPopUpStatus = !sortFilterPopUpStatus"
                                  :disclosure="sortFilterPopUpStatus ? 'down' : 'up'">
-                            Sort
+                            Filter
                         </PButton>
                         <PCard slot="content" sectioned="" style="max-width:500px;max-height:400px">
-                            Sort by
+                            Filter by
                             <PStack vertical="">
                                 <PStackItem>
                                     <PRadioButton label="Last Update" id="test1" checked name="updated_at"/>
@@ -75,6 +79,12 @@
                     </PPopover>
                 </PButtonGroup>
             </PDataTable>
+            <Pagination
+                :pageCount=users.last_page?users.last_page:1
+                :defaultPage="setDefaultPage"
+                :click-handler="handlePagination"
+            >
+            </Pagination>
         </PCard>
         <PModal
             :open="openDeleteModal"
@@ -160,11 +170,16 @@
 <script>
     import {mapGetters, mapActions} from 'vuex';
     import _ from 'lodash';
+    import Pagination from '../../../components/Pagination';
 
     export default {
         name: "Users",
+        components:{
+            Pagination
+        },
         data() {
             return {
+                setDefaultPage: 0,
                 sortFilterPopUpStatus: false,
                 openDeleteModal: false,
                 deleteUserId: null,
@@ -178,19 +193,22 @@
                     value: 'email',
                     type: 'text',
                 }, {
-                    content: "Orders",
-                    value: 'total_orders',
+                    content: "Location",
+                    value: 'location',
                     type: 'text',
                     sortable: false,
+                },{
+                    content: "Orders",
+                    value: 'orders_count',
+                    type: 'numeric',
                 }, {
                     content: "Spent",
                     value: 'total_spent',
-                    type: 'text',
-                    sortable: false,
+                    type: 'numeric',
                 }, {
                     content: "Actions",
                     value: "",
-                    type: "numeric",
+                    type: "text",
                     sortable: false,
                 }],
                 queryParams: {
@@ -254,12 +272,12 @@
                 users: 'getUsers', errors: 'getErrors',
                 message: 'getMessage'
             }),
-            // from() {
-            //     return this.serialNumbers.data && this.serialNumbers.data.length > 0 ? (this.serialNumbers.per_page * (this.serialNumbers.current_page - 1)) + 1 : 0;
-            // },
-            // to() {
-            //     return this.serialNumbers.data && this.serialNumbers.data.length > 0 ? (this.from + this.serialNumbers.data.length) - 1 : this.from;
-            // },
+            from() {
+                return this.users.data && this.users.data.length > 0 ? (this.users.per_page * (this.users.current_page - 1)) + 1 : 0;
+            },
+            to() {
+                return this.users.data && this.users.data.length > 0 ? (this.from + this.users.data.length) - 1 : this.from;
+            },
         },
         methods: {
             ...mapActions('users', [
@@ -280,6 +298,10 @@
                 this.queryParams.page = 1;
                 this.setDefaultPage = 1;
             }, 500),
+            handlePagination(pageNum) {
+                this.queryParams.page = pageNum;
+                this.setDefaultPage=0
+            },
             openCreateUserModel() {
                 this.resetError();
                 this.openUserModel = true;
@@ -377,6 +399,9 @@
                     message: data.message
                 });
                 this.load(this.queryParams);
+            },
+            toInr(amount) {
+                return (amount).toFixed(2).replace(/(\d)(?=(\d{2})+\d\.)/g, '$1,');
             }
         }
     }

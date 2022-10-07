@@ -12,12 +12,16 @@ class OrderController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @return Response
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function index(Request $request)
     {
-        $orders = Order::paginate(25);
-        return view('admin/ordersList', ['orders' => $orders]);
+        $sort = $request->sort ?? 'created_at';
+        $order = $request->order && in_array($request->order, ['ascending', 'descending']) ? str_replace('ending', '', $request->order) : 'desc';
+
+        $query = Order::with('user')->filter($request->only('search'));
+        $query = $query->orderBy($sort, $order);
+        return $query->paginate(25);
     }
 
     /**

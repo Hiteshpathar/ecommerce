@@ -1,165 +1,118 @@
 <template>
-    <PPage :breadcrumbs='[{"content":"Users","to":to}]' :title="pageTitle" fullWidth :primaryAction="primaryAction"
+    <PPage :breadcrumbs='[{"content":"Users","to":to}]' :title="pageTitle" :primaryAction="primaryAction"
     >
-        <PCard sectioned>
-            <PStack distribution="equalSpacing" vertical v-for="address in user.address" :key="address"
-                    v-if="address.is_primary ===1">
-                <PStackItem>
-                    <PStack distribution="equalSpacing">
-                        <PStackItem>
-                            Name: <b>{{address.first_name}} {{address.last_name}}</b>
+        <PLayout>
+            <PLayoutSection>
+                <PCard title="Last Order Placed" sectioned="" :actions="[]">
+                    <PEmptyState
+                        heading="This customer hasn’t placed any orders."
+                        image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
+                        :primaryAction='{"content":"Create Order"}'
+                    >
+                    </PEmptyState>
+                </PCard>
+            </PLayoutSection>
+            <PLayoutSection secondary="">
+                <PCard title="Customer" sectioned=""
+                       :actions='[{"content":"Edit","to":"/to-route"}]'>
+                    <PStack>
+                        <PStackItem fill="">
+                            <PLink @click.stop="">
+                                {{user.email}}
+                            </PLink>
                         </PStackItem>
                         <PStackItem>
-                            Email: <b>{{address.email}}</b>
-                        </PStackItem>
-                        <PStackItem>
-                            Phone: <b>{{address.mobile}}</b>
-                        </PStackItem>
-                        <PStackItem>
-                            <PLink>Edit</PLink>
-                        </PStackItem>
-                    </PStack>
-                </PStackItem>
-                <PStackItem>
-                    <PStack distribution="equalSpacing">
-                        <PStackItem>
-                            City: <b>{{address.city}}</b>
-                        </PStackItem>
-                        <PStackItem>
-                            Country: <b>{{address.country}}</b>
-                        </PStackItem>
-                        <PStackItem>
-                            Postal Code: <b>{{address.postal_code}}</b>
-                        </PStackItem>
-                        <PStackItem>
-                            <PButton v-if="address.is_primary===0">Make Default</PButton>
+                            <PButton plain="">Icon</PButton>
                         </PStackItem>
                     </PStack>
-                </PStackItem>
-                <PStackItem>
-                    <PStack distribution="equalSpacing">
+                    <PStack>
+                        <PStackItem>{{user.mobile}}</PStackItem>
+                    </PStack>
+                    <br>
+                    <PHorizontalDivider></PHorizontalDivider>
+                    <br>
+                    <PStack>
+                        <PStackItem fill="">
+                            <PHeading>Default Address</PHeading>
+                        </PStackItem>
                         <PStackItem>
-                            Address : <b>{{address.address1}},{{address.address2}}</b>
+                            <PLink @click.stop="">
+                                Manage
+                            </PLink>
                         </PStackItem>
                     </PStack>
-                </PStackItem>
-            </PStack>
-        </PCard>
-        <PCard sectioned>
-            <PStack distribution="equalSpacing" vertical v-for="address in user.address" :key="address"
-                    v-if="address.is_primary ===0">
-                <PStackItem>
-                    <PStack distribution="equalSpacing">
+                    <br>
+                    <PStack>
                         <PStackItem>
-                            Name: <b>{{address.first_name}} {{address.last_name}}</b>
-                        </PStackItem>
-                        <PStackItem>
-                            Email: <b>{{address.email}}</b>
-                        </PStackItem>
-                        <PStackItem>
-                            Phone: <b>{{address.mobile}}</b>
-                        </PStackItem>
-                        <PStackItem>
-                            <PLink>Edit</PLink>
+                            <PTextStyle>{{user.default_address.address1??''}} {{user.default_address.address2??''}}</PTextStyle>
                         </PStackItem>
                     </PStack>
-                </PStackItem>
-                <PStackItem>
-                    <PStack distribution="equalSpacing">
+                    <PStack>
                         <PStackItem>
-                            City: <b>{{address.city}}</b>
-                        </PStackItem>
-                        <PStackItem>
-                            Country: <b>{{address.country}}</b>
-                        </PStackItem>
-                        <PStackItem>
-                            Pin Code: <b>{{address.postal_code}}</b>
-                        </PStackItem>
-                        <PStackItem>
-                            <PLink>Make Default</PLink>
+                            <PTextStyle>{{user.default_address.postal_code??''}} {{user.default_address.city??''}}
+                                {{user.default_address.state??''}}
+                            </PTextStyle>
                         </PStackItem>
                     </PStack>
-                </PStackItem>
-                <PStackItem>
-                    <PStack distribution="equalSpacing">
+                    <PStack>
                         <PStackItem>
-                            Address : <b>{{address.address1}},{{address.address2}}</b>
+                            <PTextStyle>{{user.default_address.country??''}}</PTextStyle>
                         </PStackItem>
                     </PStack>
-                </PStackItem>
-                <PStackItem>
-                    <PHorizontalDivider/>
-                </PStackItem>
-                <br>
-            </PStack>
-        </PCard>
+                    <PStack>
+                        <PStackItem>
+                            <PTextStyle>{{user.default_address.mobile??''}}</PTextStyle>
+                        </PStackItem>
+                    </PStack>
+
+                    <PStack>
+                        <PStackItem>
+                            <PButton plain="" @click="this.openCreateAddressModel">Add new address</PButton>
+                        </PStackItem>
+                    </PStack>
+                </PCard>
+            </PLayoutSection>
+        </PLayout>
         <PModal
             sectioned
             :title="modelTitle"
             :primaryAction="{content: 'Save', onAction: createAddress}"
             :secondaryActions="[{content:'Close', onAction: () => {openAddressModel = false}}]"
             :open="openAddressModel" @close="openAddressModel = !openAddressModel"
-            large
         >
             <PLayout sectioned>
-                <PLayoutAnnotatedSection
-                    title="User OverView"
-                >
-                    <PFormLayout>
-                        <PFormLayoutGroup>
-                            <PTextField label="First Name *" placeholder="First Name" v-model="form.first_name"
-                                        :error="errors.first_name ? errors.first_name[0] : ''" id="first_name">
-                            </PTextField>
-                            <PTextField label="Last Name" placeholder="Last Name" v-model="form.last_name"
-                                        :error="errors.last_name ? errors.last_name[0] : ''" id="last_name"/>
-                        </PFormLayoutGroup>
-                        <PFormLayoutGroup>
-                            <PTextField label="Email *" placeholder="Email" v-model="form.email"
-                                        :error="errors.email ? errors.email[0] : ''" id="email"
-                                        :disabled="isDisableEmail"/>
-                            <PTextField label="Mobile Number*" placeholder="Mobile Number" v-model="form.mobile"
-                                        :error="errors.mobile ? errors.mobile[0] : ''" id="mobile"/>
-                        </PFormLayoutGroup>
-                    </PFormLayout>
-                </PLayoutAnnotatedSection>
-
-                <PLayoutAnnotatedSection
-                    title="Address"
-                    description="The primary address of this customer"
-                >
-                    <PFormLayout>
-                        <PFormLayoutGroup>
-                            <PTextField label="First Name *" placeholder="First Name" v-model="form.address.first_name"
-                                        id="first_name"/>
-                            <PTextField label="Last Name" placeholder="Last Name" v-model="form.address.last_name"
-                                        id="last_name"/>
-                            <PTextField label="Email *" placeholder="Email" v-model="form.address.email"
-                                        id="email"
-                                        :disabled="isDisableEmail"/>
-                            <PTextField label="Mobile Number*" placeholder="Mobile Number" v-model="form.address.mobile"
-                                        id="mobile"/>
-                            <PTextField label="Address *" placeholder="Address" v-model="form.address.address1"
-                                        id="address"/>
-                            <PTextField label="Apartment, Suite, etc.*" placeholder="Apartment, Suite, etc." v-model="form.address.address2"
-                                        id="address2"/>
-                            <PTextField label="City" placeholder="City" v-model="form.address.city"
-                                        id="city"/>
-                            <PTextField label="State" placeholder="State" v-model="form.address.state"
-                                        id="state"/>
-                            <PTextField label="Country" placeholder="Country" v-model="form.address.country"
-                                        id="country"/>
-                            <PTextField label="Pin Code" placeholder="Pin Code" v-model="form.address.postal_code"
-                                        id="postal_code"/>
-                        </PFormLayoutGroup>
-                    </PFormLayout>
-                </PLayoutAnnotatedSection>
+                <PFormLayout>
+                    <PTextField label="Country" placeholder="Country" v-model="form.address.country"
+                                id="country"/>
+                    <PFormLayoutGroup>
+                        <PTextField label="First Name *" placeholder="First Name" v-model="form.address.first_name"
+                                    id="first_name"/>
+                        <PTextField label="Last Name" placeholder="Last Name" v-model="form.address.last_name"
+                                    id="last_name"/>
+                    </PFormLayoutGroup>
+                    <PTextField label="Address *" placeholder="Address" v-model="form.address.address1"
+                                id="address"/>
+                    <PTextField label="Apartment, Suite, etc.*" placeholder="Apartment, Suite, etc."
+                                v-model="form.address.address2"
+                                id="address2"/>
+                    <PFormLayoutGroup condensed>
+                        <PTextField label="City" placeholder="City" v-model="form.address.city"
+                                    id="city"/>
+                        <PTextField label="State" placeholder="State" v-model="form.address.state"
+                                    id="state"/>
+                        <PTextField label="Pin Code" placeholder="Pin Code" v-model="form.address.postal_code"
+                                    id="postal_code"/>
+                    </PFormLayoutGroup>
+                    <PTextField label="Mobile Number*" placeholder="Mobile Number" v-model="form.address.mobile"
+                                id="mobile"/>
+                </PFormLayout>
             </PLayout>
         </PModal>
     </PPage>
 </template>
 
 <script>
-    import {mapActions} from 'vuex';
+    import {mapActions, mapGetters} from 'vuex';
 
     export default {
         data() {
@@ -172,10 +125,29 @@
                     content: 'Add New',
                     onAction: this.openCreateAddressModel,
                 },
-                openAddressModel: true,
+                openAddressModel: false,
                 modelTitle: "Add New Address",
                 isDisableEmail: false,
                 isEdit: false,
+                form: {
+                    _method: "POST",
+                    id: null,
+                    first_name: '',
+                    last_name: '',
+                    email: '',
+                    mobile: '',
+                    address: {
+                        first_name: '',
+                        last_name: '',
+                        mobile: '',
+                        address1: '',
+                        address2: '',
+                        city: '',
+                        country: '',
+                        postal_code: '',
+                        is_primary: 1
+                    }
+                },
             }
         },
         async created() {
@@ -183,10 +155,18 @@
             this.user = {...response.data};
             this.pageTitle = "User - " + this.user.first_name + ' ' + this.user.last_name;
         },
+        computed: {
+            ...mapGetters('users', {
+                errors: 'getErrors',
+                message: 'getMessage'
+            }),
+        },
 
         methods: {
             ...mapActions('users', [
                 'loadUser',
+                'resetError',
+                'addressCreateUpdate'
             ]),
             backToList() {
                 this.$router.push({name: 'users'});
@@ -212,12 +192,12 @@
                 this.form.last_name = "";
                 this.form.email = "";
                 this.form.mobile = "";
-                this.form.address1= '';
-                this.form.address2='';
-                this.form.city= '';
-                this.form.country= '';
-                this.form.postal_code= '';
-                this.form.is_primary= 1
+                this.form.address1 = '';
+                this.form.address2 = '';
+                this.form.city = '';
+                this.form.country = '';
+                this.form.postal_code = '';
+                this.form.is_primary = 1
 
             },
             async createAddress() {
@@ -240,17 +220,17 @@
                     this.form.first_name = "";
                     this.form.last_name = "";
                     this.form.email = "";
-                    this.form.address={
+                    this.form.address = {
                         first_name: '',
                         last_name: '',
-                        email:'',
+                        email: '',
                         mobile: '',
-                        address1:'',
-                        address2:'',
-                        city:'',
-                        country:'',
-                        postal_code:'',
-                        is_primary:1
+                        address1: '',
+                        address2: '',
+                        city: '',
+                        country: '',
+                        postal_code: '',
+                        is_primary: 1
                     }
                     this.load(this.queryParams);
                 }

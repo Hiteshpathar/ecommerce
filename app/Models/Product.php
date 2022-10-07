@@ -9,17 +9,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Product extends Model
 {
     use HasFactory,SoftDeletes;
-    public function inventory()
-    {
-        return $this->hasOne(ProductInventory::class,'id','inventory_id');
-    }
+
+    protected $fillable = [
+        'title',
+        'description',
+        'price',
+        'inventory',
+        'is_active',
+        'category_id'
+    ];
+
     public function category()
     {
         return $this->hasOne(ProductCategory::class,'id','category_id');
     }
     public function orders()
     {
-        return $this->hasmany(Order::class);
+        return $this->hasmany(Order::class,'id','product_id');
     }
     public function cart()
     {

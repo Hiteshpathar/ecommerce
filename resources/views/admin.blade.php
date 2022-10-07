@@ -7,7 +7,7 @@
 
     <title>User Management</title>
     <!--end::Page Vendors Styles -->
-    <link rel="shortcut icon" href="../../images/Fevicon.png"/>
+        <link rel="shortcut icon" href="#"/>
 
 </head>
 <body>

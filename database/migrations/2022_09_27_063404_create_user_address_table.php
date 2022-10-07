@@ -18,7 +18,6 @@ class CreateUserAddressesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('email');
             $table->string('address1')->nullable();
             $table->string('address2')->nullable();
             $table->string('city')->nullable();
