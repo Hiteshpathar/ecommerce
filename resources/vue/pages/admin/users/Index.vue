@@ -1,19 +1,19 @@
 <template>
-    <PPage title="Users"
-           :primaryAction="primaryAction"
+    <PPage :primaryAction="primaryAction"
            full-width
+           title="Users"
     >
         <PCard sectioned>
             <PDataTable
-                :headings="headings"
+                :columnContentTypes="[]"
                 :footerContent="users.data && users.data.length ? 'Showing '+ from + ' - '+ to +' of '+ users.total + ' results' : 'No data found'"
+                :headings="headings"
+                :inputFilter="queryParams.search"
                 :resourceName="{'singular': 'User By Name, Email','plural': 'Users By Name, Email '}"
                 :rows="users.data"
                 :sort="{value: queryParams.sort,direction: queryParams.order}"
-                @sort-changed="handleSort"
-                :inputFilter="queryParams.search"
                 @input-filter-changed="handleSearch"
-                :columnContentTypes="[]"
+                @sort-changed="handleSort"
                 hasFilter
             >
                 <template v-slot:item="{item}">
@@ -38,58 +38,34 @@
                         <PDataTableCol>
                             <PButtonGroup segmented spacing="extraTight">
 
-                                <PButton title="Resend" @click="onResend(item.id)" size="slim">
+                                <PButton @click="onResend(item.id)" size="slim" title="Resend">
                                     <PIcon source="MobileAcceptMajor" v-if="item.is_email_sent"/>
                                     <PIcon source="EmailMajor" v-else/>
                                 </PButton>
 
-                                <PButton title="Edit" @click="
-                                            editUser(item)" size="slim">
+                                <PButton @click="
+                                            editUser(item)" size="slim" title="Edit">
                                     <PIcon source="EditMajor"/>
                                 </PButton>
 
-                                <PButton title="Delete" destructive size="slim" @click="deleteUser(item.id)">
+                                <PButton @click="deleteUser(item.id)" destructive size="slim" title="Delete">
                                     <PIcon source="DeleteMajor"/>
                                 </PButton>
                             </PButtonGroup>
                         </PDataTableCol>
                     </PDataTableRow>
                 </template>
-                <PButtonGroup slot="filter" segmented>
-                    <PPopover id="popover_1" :active.sync="sortFilterPopUpStatus" fullWidth="" fullHeight
-                              preferredAlignment="right">
-                        <PButton slot="activator" @click="sortFilterPopUpStatus = !sortFilterPopUpStatus"
-                                 :disclosure="sortFilterPopUpStatus ? 'down' : 'up'">
-                            Filter
-                        </PButton>
-                        <PCard slot="content" sectioned="" style="max-width:500px;max-height:400px">
-                            Filter by
-                            <PStack vertical="">
-                                <PStackItem>
-                                    <PRadioButton label="Last Update" id="test1" checked name="updated_at"/>
-                                </PStackItem>
-                                <PStackItem>
-                                    <PRadioButton label="Amount Spent" id="test2" name="total_spent"/>
-                                </PStackItem>
-                                <PStackItem>
-                                    <PRadioButton label="Total Orders" id="test3" name="total_orders"/>
-                                </PStackItem>
-                            </PStack>
-                        </PCard>
-                    </PPopover>
-                </PButtonGroup>
+
             </PDataTable>
             <Pagination
-                :pageCount=users.last_page?users.last_page:1
-                :defaultPage="setDefaultPage"
                 :click-handler="handlePagination"
+                :defaultPage="setDefaultPage"
+                :pageCount=users.last_page?users.last_page:1
             >
             </Pagination>
         </PCard>
         <PModal
             :open="openDeleteModal"
-            title="Delete User"
-            sectioned
             :secondaryActions='[
                 {
                     "content":"Delete",
@@ -98,16 +74,18 @@
                 }
             ]'
             @close="openDeleteModal = !openDeleteModal"
+            sectioned
+            title="Delete User"
         >
             <PTextStyle>Are you sure you want to delete user?</PTextStyle>
         </PModal>
         <PModal
-            sectioned
-            :title="modelTitle"
+            :open="openUserModel"
             :primaryAction="{content: 'Save', onAction: createUser}"
             :secondaryActions="[{content:'Close', onAction: () => {openUserModel = false}}]"
-            :open="openUserModel" @close="openUserModel = !openUserModel"
-            large
+            :title="modelTitle"
+            @close="openUserModel = !openUserModel" large
+            sectioned
         >
             <PLayout sectioned>
                 <PLayoutAnnotatedSection
@@ -115,49 +93,57 @@
                 >
                     <PFormLayout>
                         <PFormLayoutGroup>
-                            <PTextField label="First Name *" placeholder="First Name" v-model="form.first_name"
-                                        :error="errors.first_name ? errors.first_name[0] : ''" id="first_name">
+                            <PTextField :error="errors.first_name ? errors.first_name[0] : ''" id="first_name"
+                                        label="First Name *"
+                                        placeholder="First Name" v-model="form.first_name">
                             </PTextField>
-                            <PTextField label="Last Name" placeholder="Last Name" v-model="form.last_name"
-                                        :error="errors.last_name ? errors.last_name[0] : ''" id="last_name"/>
+                            <PTextField :error="errors.last_name ? errors.last_name[0] : ''" id="last_name"
+                                        label="Last Name"
+                                        placeholder="Last Name" v-model="form.last_name"/>
                         </PFormLayoutGroup>
                         <PFormLayoutGroup>
-                            <PTextField label="Email *" placeholder="Email" v-model="form.email"
-                                        :error="errors.email ? errors.email[0] : ''" id="email"
-                                        :disabled="isDisableEmail"/>
-                            <PTextField label="Mobile Number*" placeholder="Mobile Number" v-model="form.mobile"
-                                        :error="errors.mobile ? errors.mobile[0] : ''" id="mobile"/>
+                            <PTextField :disabled="isDisableEmail" :error="errors.email ? errors.email[0] : ''"
+                                        id="email"
+                                        label="Email *" placeholder="Email"
+                                        v-model="form.email"/>
+                            <PTextField :error="errors.mobile ? errors.mobile[0] : ''" id="mobile" label="Mobile Number"
+                                        placeholder="Mobile Number" v-model="form.mobile"/>
                         </PFormLayoutGroup>
                     </PFormLayout>
                 </PLayoutAnnotatedSection>
 
                 <PLayoutAnnotatedSection
-                    title="Address"
                     description="The primary address of this customer"
+                    title="Address"
+                    v-if="!isEdit"
                 >
                     <PFormLayout>
+                        <PFormLayoutGroup condensed>
+                            <PTextField id="first_name" label="First Name *" placeholder="First Name"
+                                        v-model="form.address.first_name"/>
+                            <PTextField id="last_name" label="Last Name" placeholder="Last Name"
+                                        v-model="form.address.last_name"/>
+                        </PFormLayoutGroup>
+                        <PFormLayoutGroup condensed>
+                            <PTextField id="address" label="Address" placeholder="Address"
+                                        v-model="form.address.address1"/>
+                            <PTextField id="address2" label="Apartment, Suite, etc."
+                                        placeholder="Apartment, Suite, etc."
+                                        v-model="form.address.address2"/>
+                        </PFormLayoutGroup>
+                        <PFormLayoutGroup condensed>
+                            <PTextField id="city" label="City" placeholder="City"
+                                        v-model="form.address.city"/>
+                            <PTextField id="state" label="State" placeholder="State"
+                                        v-model="form.address.state"/>
+                            <PTextField id="country" label="Country" placeholder="Country"
+                                        v-model="form.address.country"/>
+                        </PFormLayoutGroup>
                         <PFormLayoutGroup>
-                            <PTextField label="First Name *" placeholder="First Name" v-model="form.address.first_name"
-                                        id="first_name"/>
-                            <PTextField label="Last Name" placeholder="Last Name" v-model="form.address.last_name"
-                                        id="last_name"/>
-                            <PTextField label="Email *" placeholder="Email" v-model="form.address.email"
-                                        id="email"
-                                        :disabled="isDisableEmail"/>
-                            <PTextField label="Mobile Number*" placeholder="Mobile Number" v-model="form.address.mobile"
-                                        id="mobile"/>
-                            <PTextField label="Address *" placeholder="Address" v-model="form.address.address1"
-                                        id="address"/>
-                            <PTextField label="Apartment, Suite, etc.*" placeholder="Apartment, Suite, etc." v-model="form.address.address2"
-                                        id="address2"/>
-                            <PTextField label="City" placeholder="City" v-model="form.address.city"
-                                        id="city"/>
-                            <PTextField label="State" placeholder="State" v-model="form.address.state"
-                                        id="state"/>
-                            <PTextField label="Country" placeholder="Country" v-model="form.address.country"
-                                        id="country"/>
-                            <PTextField label="Pin Code" placeholder="Pin Code" v-model="form.address.postal_code"
-                                        id="postal_code"/>
+                            <PTextField id="mobile" label="Mobile Number" placeholder="Mobile Number"
+                                        v-model="form.address.mobile"/>
+                            <PTextField id="postal_code" label="Pin Code" placeholder="Pin Code"
+                                        v-model="form.address.postal_code"/>
                         </PFormLayoutGroup>
                     </PFormLayout>
                 </PLayoutAnnotatedSection>
@@ -170,17 +156,13 @@
 <script>
     import {mapGetters, mapActions} from 'vuex';
     import _ from 'lodash';
-    import Pagination from '../../../components/Pagination';
 
     export default {
         name: "Users",
-        components:{
-            Pagination
-        },
+
         data() {
             return {
                 setDefaultPage: 0,
-                sortFilterPopUpStatus: false,
                 openDeleteModal: false,
                 deleteUserId: null,
                 headings: [{
@@ -197,7 +179,7 @@
                     value: 'location',
                     type: 'text',
                     sortable: false,
-                },{
+                }, {
                     content: "Orders",
                     value: 'orders_count',
                     type: 'numeric',
@@ -225,24 +207,22 @@
                     last_name: '',
                     email: '',
                     mobile: '',
-                    address:{
+                    address: {
                         first_name: '',
                         last_name: '',
-                        email:'',
                         mobile: '',
-                        address1:'',
-                        address2:'',
-                        city:'',
-                        country:'',
-                        postal_code:'',
-                        is_primary:1
+                        address1: '',
+                        address2: '',
+                        city: '',
+                        country: '',
+                        postal_code: '',
+                        is_primary: 1
                     }
                 },
                 isDisableEmail: true,
                 openUserModel: false,
                 modelTitle: "Add New User",
                 isEdit: false,
-                openDealerModel: false,
                 primaryAction: {
                     content: 'Add New',
                     onAction: this.openCreateUserModel,
@@ -300,7 +280,7 @@
             }, 500),
             handlePagination(pageNum) {
                 this.queryParams.page = pageNum;
-                this.setDefaultPage=0
+                this.setDefaultPage = 0
             },
             openCreateUserModel() {
                 this.resetError();
@@ -313,17 +293,16 @@
                 this.form.last_name = "";
                 this.form.email = "";
                 this.form.mobile = "";
-                this.form.address={
+                this.form.address = {
                     first_name: '',
-                        last_name: '',
-                        email:'',
-                        mobile: '',
-                        address1:'',
-                        address2:'',
-                        city:'',
-                        country:'',
-                        postal_code:'',
-                        is_primary:1
+                    last_name: '',
+                    mobile: '',
+                    address1: '',
+                    address2: '',
+                    city: '',
+                    country: '',
+                    postal_code: '',
+                    is_primary: 1
                 }
             },
             async createUser() {
@@ -346,17 +325,16 @@
                     this.form.first_name = "";
                     this.form.last_name = "";
                     this.form.email = "";
-                    this.form.address={
+                    this.form.address = {
                         first_name: '',
                         last_name: '',
-                        email:'',
                         mobile: '',
-                        address1:'',
-                        address2:'',
-                        city:'',
-                        country:'',
-                        postal_code:'',
-                        is_primary:1
+                        address1: '',
+                        address2: '',
+                        city: '',
+                        country: '',
+                        postal_code: '',
+                        is_primary: 1
                     }
                     this.load(this.queryParams);
                 }
@@ -369,6 +347,9 @@
                 this.modelTitle = "Edit User";
                 this.isDisableEmail = true;
                 this.form = {...response.data};
+                if (this.form.default_address) {
+                    this.form.address = this.form.default_address;
+                }
             },
             openUserView(id) {
                 this.$router.push({name: 'view-user', params: {id: id}});

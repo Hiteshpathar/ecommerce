@@ -26,22 +26,20 @@ class UserController extends Controller
         $users = $query->paginate($request->limit);
 
         $users->map(function ($user) {
-            foreach ($user->address as $address){
-                if ($address->is_primary === 1){
+            foreach ($user->address as $address) {
+                if ($address->is_primary === 1) {
                     $user->location = rtrim(ltrim(($address->city != "" || $address->state != "") ? $address->city . "," . $address->state : "", ","), ",");
                 }
             }
         });
         return $users;
-
-//        return view('admin/usersList', ['users' => $users]);
     }
 
     public function show($id)
     {
-        $user = User::with('address','orders')->find($id);
-        foreach ($user->address as $address){
-            if ($address->is_primary ===1){
+        $user = User::with('address', 'orders')->find($id);
+        foreach ($user->address as $address) {
+            if ($address->is_primary === 1) {
                 $user['default_address'] = $address;
             }
         }
@@ -55,6 +53,7 @@ class UserController extends Controller
             $data['password'] = Str::random(20);
             $user = User::create($data);
             $user->address()->create($request->address);
+            $user->save();
             return response(['message' => "User has been created successfully!"]);
         } catch (\Exception $e) {
             return response(['error' => 'Something went wrong, Try again later!'], 500);
@@ -65,7 +64,8 @@ class UserController extends Controller
     {
         $data = $request->only('first_name', 'last_name', 'email', 'mobile');
         try {
-            User::where('id', $id)->update($data);
+            $user = User::where('id', $id)->update($data);
+            $user->address()->update($request->address);
             return response(['message' => "User has been updated successfully!"]);
         } catch (\Exception $e) {
             return response(['error' => 'Something went wrong, Try again later!'], 500);
@@ -82,11 +82,9 @@ class UserController extends Controller
             'to' => $user->email,
             'from' => 'admin@gmail.com',
             'subject' => 'Your Credentials from ...'];
-
-        SendEmailJob::dispatch($data,$user);
-        return response(['message' => "Mail been Sent successfully!"]);
-
-
+        $user->update(['is_email_sent' => 1]);
+        SendEmailJob::dispatch($data, $user);
+        return response(['message' => "Mail has been Sent successfully!"]);
     }
 
     public function destroy($id)

@@ -15,7 +15,7 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('order_number')->unique();
+            $table->unsignedBigInteger('order_number')->autoIncrement()->from(1000);
             $table->unsignedBigInteger('user_id')->nullable();
             $table->float('sub_total');
             $table->float('total_amount');

@@ -1,9 +1,13 @@
-const initialState = {
-    authenticated: false,
+const getDefaultState = () => {
+    return {
+        authenticated: false,
+    }
 };
 
+const state = getDefaultState();
+
 const getters = {
-    authenticated(state) {
+    authenticated: (state) => {
         return state.authenticated
     },
 };
@@ -15,38 +19,28 @@ const mutations = {
 
 
 const actions = {
-    isLoggedIn: async ({state, commit, dispatch, getters}) => {
-
-        if (!state.authenticated) {
-            let {data} = await axios.get('/admin/is-admin-login',{email:state.email});
-
-            if (data>0){
-                return 200;
-            } else {
-                return 400;
-            }
+    async isLoggedIn({state}) {
+        if (state.authenticated) {
+            return true;
         } else {
-            return 200;
+            let {data} =  await axios.get('/admin/is-admin-login');
+            return data;
         }
+
     },
-    login({commit}) {
-        commit('SET_AUTHENTICATED', true)
+    async setAdmin({commit}) {
+        commit('SET_AUTHENTICATED', true);
     },
-    async unsetAdmin({state,commit}) {
-        await axios.post('/admin/logout',{email:state.email});
+    async unsetAdmin({commit}) {
+        await axios.post('/admin/logout');
         commit('SET_AUTHENTICATED', false);
-        // router.push({name:"logout"})
     }
-    // logout({commit}) {
-    //     commit('SET_USER', {})
-    //     commit('SET_AUTHENTICATED', false)
-    //     commit('SET_VERIFIED', false)
-    // },
 };
 
 export default {
-    state: initialState,
-    mutations,
+    namespaced: true,
+    state,
+    getters,
     actions,
-    getters
+    mutations
 }

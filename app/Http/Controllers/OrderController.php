@@ -21,7 +21,7 @@ class OrderController extends Controller
 
         $query = Order::with('user')->filter($request->only('search'));
         $query = $query->orderBy($sort, $order);
-        return $query->paginate(25);
+        return $query->paginate($request->limit);
     }
 
     /**

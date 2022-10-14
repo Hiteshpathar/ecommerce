@@ -138,18 +138,16 @@ const router = new VueRouter({
 
 // Verify Auth.
 
-// router.beforeEach(async (to, from, next) => {
-//     if (to.meta.requiresAdminAuth) {
-//         let requiresAuth = await store.dispatch('isLoggedIn');
-//         console.log(requiresAuth);
-//         if (requiresAuth === 200) {
-//             return next();
-//         } else {
-//             return next({name: 'login'})
-//         }
-//     }
-//     return next();
-// });
-//
+router.beforeEach(async (to, from, next) => {
+    if (to.meta.requiresAdminAuth) {
+        let requiresAuth = await store.dispatch('adminAuth/isLoggedIn');
+        if (requiresAuth) {
+            return next();
+        } else {
+            return next({name: 'login'})
+        }
+    }
+    return next();
+});
 
 export default router;

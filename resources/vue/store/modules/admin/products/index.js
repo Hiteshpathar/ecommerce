@@ -80,9 +80,22 @@ const actions = {
     },
     async productCreateUpdate({commit, dispatch, state}, requestData) {
         commit('setLoading');
+        const formData = new FormData();
+        for (const index in requestData) {
+            if (index === 'images') {
+                for (const imageIndex in requestData[index]) {
+                    formData.append('images[' + imageIndex + ']', requestData[index][imageIndex]);
+                }
+            } else {
+                formData.append(index, requestData[index]);
+            }
+        }
         try {
+            const config = {
+                headers: {'content-type': 'multipart/form-data'}
+            }
             let url = requestData.id ? '/admin/api-products/' + requestData.id : '/admin/api-products';
-            let {data} = await axios.post(url, requestData);
+            let {data} = await axios.post(url, formData, config);
             commit('setMessage', data.message);
             commit('resetErrors');
         } catch ({response}) {

@@ -3,6 +3,24 @@
     >
         <PLayout>
             <PLayoutSection>
+                <PCard sectioned="">
+                    <PStack>
+                        <PStackItem width="33%">
+                            <PTextStyle>Amount spent</PTextStyle>
+                            <PDisplayText element="h2">₹44,997.00</PDisplayText>
+                        </PStackItem>
+                        <PStackItem><PVerticalDivider /></PStackItem>
+                        <PStackItem width="30%">
+                            <PTextStyle>Amount spent</PTextStyle>
+                            <PDisplayText element="h2">₹44,997.00</PDisplayText>
+                        </PStackItem>
+                        <PStackItem><PVerticalDivider /></PStackItem>
+                        <PStackItem>
+                            <PTextStyle>Amount spent</PTextStyle>
+                            <PDisplayText element="h2">₹44,997.00</PDisplayText>
+                        </PStackItem>
+                    </PStack>
+                </PCard>
                 <PCard title="Last Order Placed" sectioned="" :actions="[]">
                     <PEmptyState
                         heading="This customer hasn’t placed any orders."
@@ -90,8 +108,8 @@
                         <PTextField label="Last Name" placeholder="Last Name" v-model="form.address.last_name"
                                     id="last_name"/>
                     </PFormLayoutGroup>
-                    <PTextField label="Address *" placeholder="Address" v-model="form.address.address1"
-                                id="address"/>
+<!--                    <PTextField label="Address *" placeholder="Address" v-model="form.address.address1"-->
+<!--                                id="address"/>-->
                     <PTextField label="Apartment, Suite, etc.*" placeholder="Apartment, Suite, etc."
                                 v-model="form.address.address2"
                                 id="address2"/>

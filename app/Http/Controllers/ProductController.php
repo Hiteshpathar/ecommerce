@@ -24,12 +24,12 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $sort = $request->sort ?? 'created_at';
+        $sort = $request->sort ?? 'updated_at';
         $order = $request->order && in_array($request->order, ['ascending', 'descending']) ? str_replace('ending', '', $request->order) : 'desc';
 
         $query = Product::with('orders', 'category')->filter($request->only('search', 'status'));
         $query = $query->orderBy($sort, $order);
-        return $query->paginate(25);
+        return $query->paginate($request->limit);
     }
 
     /**
@@ -58,16 +58,21 @@ class ProductController extends Controller
         ]);
 //        try {
         $data = $request->only(['title', 'description', 'price', 'inventory', 'is_active']);
-        $data['category_id'] = $request->category['id'] ?? null;
+        $request->category_id != "null" ? $data['category_id'] = $request->category_id : '';
+
+        $image = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->images as $file) {
+                $file_path = Storage::disk('public')->put('photos', $file);
+                $file_name = explode('/', $file_path);
+                $image[] = $file_name[1];
+            }
+            dd($file_path);
+            $data['images'] = implode(',', $image);
+        }
+
         Product::create($data);
-        return response(['message' => "Product has been created successfully!"]);
-//        $files = $request->file('images');
-//        foreach ($files as $file) {
-//            $file_path = Storage::disk('public')->put('photos', $file);
-//            $file_name = explode('/', $file_path);
-//            $data[] = $file_name[1];
-//        }
-//        $product->images = implode(',', $data);
+//        return response(['message' => "Product has been created successfully!"]);
 //        } catch (\Exception $e) {
 //            return response(['error' => 'Something went wrong, Try again later!'], 500);
 //        }
@@ -76,12 +81,19 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Product $product
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
      */
     public function show($id)
     {
-        return Product::with('category')->find($id);
+        return $product = Product::with('category')->find($id);
+//        if ($product->images) {
+//            $file_names = explode(",",$product->images);
+//            foreach ($file_names as $file_name){
+//                $file[] = Storage::disk('public')->get('/photos/'.$file_name);
+//            }
+//        }
+//        dd($file);
     }
 
     /**
@@ -109,29 +121,16 @@ class ProductController extends Controller
     {
         $request->validate([
             'title' => 'required',
+            'price' => 'required'
         ]);
-        $product = Product::find($request->id);
-        $product->title = $request->input('title');
-        $product->description = $request->input('description');
-        $product->inventory = $request->input('quantity');
-        $product->is_active = $request->input('is_active');
-        $product->category_id = $request->input('category');
-        $product->price = $request->input('price') ?? 0;
-        $product->discount_id = $request->input('discount');
-
-
-        if ($request->file('images')) {
-            $files = $request->file('images');
-            foreach ($files as $file) {
-                $file_path = Storage::disk('public')->put('photos', $file);
-                $file_name = explode('/', $file_path);
-                $data[] = $file_name[1];
-            }
-            $product->images = implode(',', $data);
+        try {
+            $data = $request->only(['title', 'description', 'price', 'inventory', 'is_active', 'category_id']);
+            $product = Product::find($request->id);
+            $product->update($data);
+            return response(['message' => "Product has been created successfully!"]);
+        } catch (\Exception $e) {
+            return response(['error' => 'Something went wrong, Try again later!'], 500);
         }
-
-        $product->save();
-        return redirect()->route('products-list')->with('success', 'Product added successfully');
     }
 
     /**

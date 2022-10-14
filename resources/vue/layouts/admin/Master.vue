@@ -1,10 +1,9 @@
 <template>
     <div>
-        <PFrame
-            :topBar="{
-
-            logo: this.logo,
-            userMenu: {
+        <PFrame>
+        <PTopBar
+            :logo="this.logo"
+            :userMenu="{
                 id: 'Polaris-UserMenu',
                 actions: [
                     {
@@ -22,13 +21,12 @@
             onToggle:()=>{
                 this.isOpen =! this.isOpen
             }
-        },
-    }">
+        }"/>
             <PNavigation
-                slot="navigation"
-                location="/"
-                :logo=this.logo
                 :items=this.items
+                :logo=this.logo
+                location="/"
+                slot="navigation"
             />
             <router-view/>
         </PFrame>
@@ -36,11 +34,14 @@
 </template>
 
 <script>
+    import {mapActions} from "vuex";
+
     export default {
         name: "Master",
         data() {
             return {
                 isOpen: false,
+                isAuthenticated:true,
                 logo: {
                     width: 124,
                     topBarSource: "https://cdn.shopify.com/s/files/1/1564/7647/files/hulk-apps-darken_c0448e92-587f-47a8-9473-5ea0023b5ffd.svg?v=1583731462",
@@ -66,7 +67,7 @@
                                 to: {name: "users"},
                                 label: "Users",
                                 icon: "CustomersMajor"
-                            },{
+                            }, {
                                 to: {name: "analytics"},
                                 label: "Analytics",
                                 icon: "AnalyticsMajor"
@@ -76,11 +77,17 @@
                 ]
             }
         },
+
         methods: {
+            ...mapActions('adminAuth', [
+                'unsetAdmin',
+                'isLoggedIn'
+            ]),
+
             async logout() {
-                await this.$store.dispatch('unsetAdmin');
-                this.isOpen=false;
-                // this.$router.push({name: "login"});
+                await this.unsetAdmin();
+                this.isOpen = false;
+                this.$router.push({name: "login"});
             },
         }
     }

@@ -21,24 +21,16 @@
                         :actions='[{"content":"Upload Image"}]'
                     />
                     <PCardSection>
-                        <PStackItem>
-                            <PTextStyle variation="strong">You can upload only one file.</PTextStyle>
-                            <br>
-                            <input type="file" id="file" name="file" accept="image/*" @change="onSelectFile($event)">
-                            <PInlineError v-if="errors.file" :message="errors.file[0]" fieldID="file"/>
-                        </PStackItem>
-                        <PStackItem>
-                            <PImage :source="form.image_preview" v-if="form.image_preview" height="100"
-                                    width="100" @click.native="fullImage"/>
-                        </PStackItem>
-                        <PStackItem fill="">
-                            <PButton title="Remove" v-if="form.image_preview" plain @click="removeImage">
-                                <!--<PIcon source="MobileCancelMajorMonotone" color="red"/>-->
-                                <PIcon source="MobileCancelMajor" color="critical"/>
-                            </PButton>
-                        </PStackItem>
+                        <PDropZone
+                            :openFileDialog="false"
+                            :files="this.form.images??[]"
+                            :validImageTypes='["image/gif","image/jpeg","image/png"]'
+                            :handleOnDrop="handleOnDrop"
+                            uploadedFiles
+                            type="image"
+                            :handleOnDropAccepted="handleOnDropAccepted"
+                        />
                     </PCardSection>
-
                 </PCard>
                 <PCard sectioned="" :actions="[]" title="Pricing">
                     <PFormLayout>
@@ -69,14 +61,13 @@
                                 textField="name"
                                 valueField="id"
                                 :value="form.category"
-
                             />
                         </template>
                     </PFormLayout>
                 </PCard>
             </PLayoutSection>
             <PLayoutSection>
-                <PButton primary @click="createProduct">Save</PButton>
+                <PButton primary @click="createUpdateProduct">Save</PButton>
             </PLayoutSection>
         </PLayout>
     </PPage>
@@ -92,12 +83,7 @@
             return {
                 pageTitle: "Add Product",
                 product: {},
-                popup: false,
-                categoryOption: [
-                    // {"label":"Vue.js","language":"vue.js"},
-                    // {"label":"Rails","language":"rails"},
-                    // {"label":"Laravel","language":"laravel","hidden":true},
-                ],
+                categoryOption: [],
                 form: {
                     _method: "POST",
                     id: null,
@@ -107,14 +93,9 @@
                     price: null,
                     inventory: 0,
                     category: null,
-                    image_preview: '',
-                    is_remove_image: 0
+                    category_id: null,
+                    images: [],
                 },
-                importForm: {
-                    file: '',
-                    email: ''
-                },
-                files: [],
                 to: {name: "products"},
             }
         },
@@ -123,7 +104,10 @@
                 this.pageTitle = "Edit Product";
                 const response = await this.loadProduct(this.$route.params.id);
                 this.form = {...response.data};
-                this.form.category = {"name": response.data.category.name, "id": response.data.category.id};
+                this.form.images = [];
+                if (response.data.category) {
+                    this.form.category = {"name": response.data.category.name, "id": response.data.category.id};
+                }
             }
             let {data} = await this.getCategories();
             this.categoryOption = data;
@@ -142,28 +126,24 @@
                 'resetError',
             ]),
 
-            onSelectFile: function (e) {
-
-                const file = e.target.files[0];
-                if (!e.target.files.length)
-                    return;
-                this.importForm.file = file;
-
-                this.form.image_preview = URL.createObjectURL(file);
-                this.form.is_remove_image = 0;
+            handleOnDrop(files, accepted, rejected) {
+                // this.files = accepted;
             },
-            removeImage() {
-                this.form.image_preview = "";
-                this.form.is_remove_image = 1;
-                if (this.isEdit == false) {
-                    this.form.file = '';
-                    document.getElementById('file').value = "";
-                }
+            handleOnDropAccepted(files) {
+                this.form.images = files;
             },
             getSelectedCategory(item) {
                 this.form.category = item;
             },
-            async createProduct() {
+            async createUpdateProduct() {
+                if (this.form.id) {
+                    this.form._method = "PUT";
+                } else {
+                    this.form._method = "POST";
+                }
+                if (this.form.category) {
+                    this.form.category_id = this.form.category.id
+                }
                 await this.productCreateUpdate(this.form);
                 if (this.errors.length === 0) {
                     this.$pToast.open({
@@ -174,7 +154,9 @@
                     this.form.is_active = 1;
                     this.form.inventory = 0;
                     this.form.category = null;
+                    this.form.category_id = null;
                     this.form.price = 0;
+                    this.images = [];
                     this.$router.push(this.to);
                 }
             }

@@ -5,9 +5,10 @@
     >
         <PCard sectioned>
             <PDataTable
-                :resourceName="{singular: 'User', plural: 'Users'}"
+                :resourceName="{singular: 'Order', plural: 'Orders'}"
+                :footerContent="orders.data && orders.data.length ? 'Showing '+ from + ' - '+ to +' of '+ orders.total + ' results' : 'No data found'"
                 :headings="headings"
-                :rows="products.data"
+                :rows="orders.data"
                 :sort="{value: queryParams.sort,direction: queryParams.order}"
                 :inputFilter="queryParams.search"
                 @input-filter-changed="handleSearch"
@@ -69,6 +70,12 @@
                     </PPopover>
                 </PButtonGroup>
             </PDataTable>
+            <Pagination
+                :pageCount=orders.last_page?orders.last_page:1
+                :defaultPage="setDefaultPage"
+                :click-handler="handlePagination"
+            >
+            </Pagination>
         </PCard>
 
         <PModal
@@ -99,6 +106,7 @@
         name: "Orders",
         data() {
             return {
+                setDefaultPage: 0,
                 sortFilterPopUpStatus: false,
                 openDeleteModal: false,
                 deleteProductId: null,
@@ -168,15 +176,15 @@
         },
         computed: {
             ...mapGetters('orders', {
-                products: 'getOrders', errors: 'getErrors',
+                orders: 'getOrders', errors: 'getErrors',
                 message: 'getMessage'
             }),
-            // from() {
-            //     return this.serialNumbers.data && this.serialNumbers.data.length > 0 ? (this.serialNumbers.per_page * (this.serialNumbers.current_page - 1)) + 1 : 0;
-            // },
-            // to() {
-            //     return this.serialNumbers.data && this.serialNumbers.data.length > 0 ? (this.from + this.serialNumbers.data.length) - 1 : this.from;
-            // },
+            from() {
+                return this.orders.data && this.orders.data.length > 0 ? (this.orders.per_page * (this.orders.current_page - 1)) + 1 : 0;
+            },
+            to() {
+                return this.orders.data && this.orders.data.length > 0 ? (this.from + this.orders.data.length) - 1 : this.from;
+            },
         },
         methods: {
             ...mapActions('orders', [
@@ -197,6 +205,10 @@
                 this.queryParams.page = 1;
                 this.setDefaultPage = 1;
             }, 500),
+            handlePagination(pageNum) {
+                this.queryParams.page = pageNum;
+                this.setDefaultPage = 0
+            },
             async editProduct(item) {
                 this.resetError();
                 const response = await this.loadUser(item.id);

@@ -26,11 +26,11 @@ class UserFormRequest extends FormRequest
         $rules = [];
         $rules['first_name'] = 'required|regex:/^[\pL\s\-]+$/u|max:255';
 
-//        if ($this->method() == 'PUT') {
-//            $rules['email'] = 'required|email|max:255|unique:users,email,' . $this->id . ',id';
-//        } else {
-//            $rules['email'] = 'required|email|max:255|unique:users,email';
-//        }
+        if ($this->method() == 'PUT') {
+            $rules['email'] = 'required|email|max:255|unique:users,email,' . $this->id . ',id';
+        } else {
+            $rules['email'] = 'required|email|max:255|unique:users,email';
+        }
         return $rules;
     }
     public function messages()

@@ -5,7 +5,8 @@
     >
         <PCard sectioned>
             <PDataTable
-                :resourceName="{singular: 'User', plural: 'Users'}"
+                :resourceName="{singular: 'Product', plural: 'Products'}"
+                :footerContent="products.data && products.data.length ? 'Showing '+ from + ' - '+ to +' of '+ products.total + ' results' : 'No data found'"
                 :headings="headings"
                 :rows="products.data"
                 :sort="{value: queryParams.sort,direction: queryParams.order}"
@@ -66,6 +67,12 @@
                     </PPopover>
                 </PButtonGroup>
             </PDataTable>
+            <Pagination
+                :pageCount=products.last_page?products.last_page:1
+                :defaultPage="setDefaultPage"
+                :click-handler="handlePagination"
+            >
+            </Pagination>
         </PCard>
 
         <PModal
@@ -92,9 +99,10 @@
     import _ from 'lodash';
 
     export default {
-        name: "Users",
+        name: "products",
         data() {
             return {
+                setDefaultPage: 0,
                 sortFilterPopUpStatus: false,
                 openDeleteModal: false,
                 deleteProductId: null,
@@ -102,16 +110,15 @@
                     content: "Product",
                     value: 'title',
                     type: 'text',
-                    sortable: false,
                 }, {
                     content: "Status",
                     value: 'is_active',
                     type: 'text',
+                    sortable: false,
                 }, {
                     content: "Inventory",
                     value: 'inventory',
                     type: 'text',
-                    sortable: false,
                 }, {
                     content: "Type",
                     value: 'category_id',
@@ -162,12 +169,12 @@
                 products: 'getProducts', errors: 'getErrors',
                 message: 'getMessage'
             }),
-            // from() {
-            //     return this.serialNumbers.data && this.serialNumbers.data.length > 0 ? (this.serialNumbers.per_page * (this.serialNumbers.current_page - 1)) + 1 : 0;
-            // },
-            // to() {
-            //     return this.serialNumbers.data && this.serialNumbers.data.length > 0 ? (this.from + this.serialNumbers.data.length) - 1 : this.from;
-            // },
+            from() {
+                return this.products.data && this.products.data.length > 0 ? (this.products.per_page * (this.products.current_page - 1)) + 1 : 0;
+            },
+            to() {
+                return this.products.data && this.products.data.length > 0 ? (this.from + this.products.data.length) - 1 : this.from;
+            },
         },
         methods: {
             ...mapActions('products', [
@@ -187,6 +194,10 @@
                 this.queryParams.page = 1;
                 this.setDefaultPage = 1;
             }, 500),
+            handlePagination(pageNum) {
+                this.queryParams.page = pageNum;
+                this.setDefaultPage = 0
+            },
             editProduct(id) {
                 this.$router.push({name: 'add-product', params: {id: id}});
             },

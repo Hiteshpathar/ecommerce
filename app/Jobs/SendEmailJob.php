@@ -3,12 +3,10 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class SendEmailJob implements ShouldQueue
@@ -42,7 +40,9 @@ class SendEmailJob implements ShouldQueue
                     ->from($this->details['from']);
             }
         );
-        $this->user->is_email_sent = true;
-        $this->user->save();
+    }
+    public function failed()
+    {
+        $this->user->update(['is_email_sent' => 0]);
     }
 }

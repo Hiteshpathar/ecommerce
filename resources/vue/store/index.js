@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 import users from "./modules/admin/users";
 import products from "./modules/admin/products"
 import orders from "./modules/admin/orders"
-import adminAuth from './modules/admin/auth'
+import adminAuth from "./modules/admin/auth"
 import analytics from "./modules/admin/analytics"
 
 Vue.use(Vuex);
